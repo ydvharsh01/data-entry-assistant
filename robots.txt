@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://ydvharsh01.github.io/data-entry-assistant/sitemap.xml
