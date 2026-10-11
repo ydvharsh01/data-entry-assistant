@@ -1,860 +1,261 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Data Entry Assistant</title>
-    <meta name="description" content="Free online Data Entry Assistant: clean, validate and organise your data entries in the browser. No signup, your data stays on your device.">
-    <meta name="keywords" content="data entry, data entry assistant, free data entry tool, online data entry">
-    <link rel="canonical" href="https://ydvharsh01.github.io/data-entry-assistant/">
-    <meta property="og:title" content="Data Entry Assistant">
-    <meta property="og:description" content="Free browser-based data entry tool. No signup.">
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://ydvharsh01.github.io/data-entry-assistant/">
-
-    <style>
-         :root {
-            --navy: #0F1B33;
-            --navy-2: #16264A;
-            --navy-3: #1E3164;
-            --paper: #F4F5F7;
-            --panel: #FFFFFF;
-            --line: #DFE3EA;
-            --ink: #1B2333;
-            --ink-soft: #5B6478;
-            --teal: #0E8C88;
-            --teal-dark: #0A6D69;
-            --amber: #C77D06;
-            --amber-bg: #FCEFD9;
-            --red: #C13B34;
-            --red-bg: #FBE7E5;
-            --green: #1E8A4C;
-            --green-bg: #E4F5EA;
-            --blue: #2A54C9;
-            --blue-bg: #E7ECFB;
-            --mono: ui-monospace, SFMono-Regular, "Cascadia Mono", Consolas, monospace;
-            --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            --radius: 6px;
-            --shadow: 0 1px 3px rgba(15, 27, 51, .08);
-        }
-        
-        [data-theme="dark"] {
-            --paper: #0B1220;
-            --panel: #121A2B;
-            --line: #25324A;
-            --ink: #E7EAF2;
-            --ink-soft: #9AA5BD;
-            --amber-bg: #3A2C0E;
-            --red-bg: #3A1D1B;
-            --green-bg: #123625;
-            --blue-bg: #1A2547;
-        }
-        
-        * {
-            box-sizing: border-box;
-        }
-        
-        html,
-        body {
-            height: 100%;
-        }
-        
-        body {
-            margin: 0;
-            font-family: var(--sans);
-            background: var(--paper);
-            color: var(--ink);
-            font-size: 14px;
-            line-height: 1.45;
-        }
-        
-        button,
-        input,
-        select,
-        textarea {
-            font-family: inherit;
-            font-size: inherit;
-            color: inherit;
-        }
-        
-        button {
-            cursor: pointer;
-        }
-        
-        .app {
-            display: grid;
-            grid-template-columns: 220px 1fr;
-            min-height: 100vh;
-        }
-        
-        .sidebar {
-            background: var(--navy);
-            color: #DDE3F5;
-            padding: 18px 0;
-            position: sticky;
-            top: 0;
-            height: 100vh;
-            overflow-y: auto;
-        }
-        
-        .brand {
-            padding: 0 18px 16px;
-            border-bottom: 1px solid rgba(255, 255, 255, .08);
-            margin-bottom: 10px;
-        }
-        
-        .brand .name {
-            font-weight: 700;
-            font-size: 15px;
-            letter-spacing: .2px;
-        }
-        
-        .brand .tag {
-            font-size: 11px;
-            color: #8FA0CC;
-            margin-top: 2px;
-        }
-        
-        .nav-item {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 10px 18px;
-            cursor: pointer;
-            color: #C6CFE8;
-            border-left: 3px solid transparent;
-            font-size: 13.5px;
-        }
-        
-        .nav-item:hover {
-            background: rgba(255, 255, 255, .05);
-            color: #fff;
-        }
-        
-        .nav-item.active {
-            background: var(--navy-2);
-            border-left-color: var(--teal);
-            color: #fff;
-            font-weight: 600;
-        }
-        
-        .nav-icon {
-            width: 18px;
-            text-align: center;
-            opacity: .9;
-        }
-        
-        .nav-badge {
-            margin-left: auto;
-            background: var(--red);
-            color: #fff;
-            border-radius: 10px;
-            font-size: 10.5px;
-            padding: 1px 6px;
-            min-width: 16px;
-            text-align: center;
-        }
-        
-        .main {
-            padding: 22px 26px 60px;
-            max-width: 1400px;
-        }
-        
-        .topbar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 18px;
-            gap: 14px;
-            flex-wrap: wrap;
-        }
-        
-        .topbar h1 {
-            font-size: 19px;
-            margin: 0;
-        }
-        
-        .privacy-note {
-            font-size: 11.5px;
-            color: var(--ink-soft);
-            background: var(--panel);
-            border: 1px solid var(--line);
-            padding: 6px 10px;
-            border-radius: var(--radius);
-        }
-        
-        .view {
-            display: none;
-        }
-        
-        .view.active {
-            display: block;
-        }
-        
-        .card {
-            background: var(--panel);
-            border: 1px solid var(--line);
-            border-radius: var(--radius);
-            padding: 16px;
-            box-shadow: var(--shadow);
-        }
-        
-        .grid {
-            display: grid;
-            gap: 14px;
-        }
-        
-        .grid-4 {
-            grid-template-columns: repeat(4, 1fr);
-        }
-        
-        .grid-3 {
-            grid-template-columns: repeat(3, 1fr);
-        }
-        
-        .grid-2 {
-            grid-template-columns: repeat(2, 1fr);
-        }
-        
-        @media(max-width:1000px) {
-            .grid-4 {
-                grid-template-columns: repeat(2, 1fr);
-            }
-            .grid-3 {
-                grid-template-columns: repeat(2, 1fr);
-            }
-            .app {
-                grid-template-columns: 70px 1fr;
-            }
-            .brand .tag,
-            .brand .name,
-            .nav-item span.label {
-                display: none;
-            }
-        }
-        
-        .stat {
-            padding: 14px;
-        }
-        
-        .stat .n {
-            font-size: 26px;
-            font-weight: 700;
-        }
-        
-        .stat .l {
-            font-size: 12px;
-            color: var(--ink-soft);
-            margin-top: 2px;
-        }
-        
-        .stat.err .n {
-            color: var(--red);
-        }
-        
-        .stat.warn .n {
-            color: var(--amber);
-        }
-        
-        .stat.ok .n {
-            color: var(--green);
-        }
-        
-        .section-title {
-            font-size: 14px;
-            font-weight: 700;
-            margin: 22px 0 10px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        
-        .btn {
-            background: var(--panel);
-            border: 1px solid var(--line);
-            border-radius: var(--radius);
-            padding: 7px 13px;
-            font-size: 13px;
-            font-weight: 600;
-            color: var(--ink);
-        }
-        
-        .btn:hover {
-            border-color: var(--teal);
-        }
-        
-        .btn.primary {
-            background: var(--teal);
-            border-color: var(--teal-dark);
-            color: #fff;
-        }
-        
-        .btn.primary:hover {
-            background: var(--teal-dark);
-        }
-        
-        .btn.danger {
-            background: var(--red-bg);
-            border-color: var(--red);
-            color: var(--red);
-        }
-        
-        .btn.ghost {
-            background: transparent;
-            border-color: transparent;
-        }
-        
-        .btn:disabled {
-            opacity: .45;
-            cursor: not-allowed;
-        }
-        
-        .btn-row {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-            align-items: center;
-        }
-        
-        .progress-wrap {
-            background: var(--line);
-            border-radius: 20px;
-            height: 22px;
-            overflow: hidden;
-            position: relative;
-        }
-        
-        .progress-bar {
-            background: linear-gradient(90deg, var(--teal), var(--teal-dark));
-            height: 100%;
-            transition: width .3s;
-        }
-        
-        .progress-label {
-            position: absolute;
-            inset: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 11.5px;
-            font-weight: 700;
-            color: #fff;
-            mix-blend-mode: difference;
-        }
-        
-        .dropzone {
-            border: 2px dashed var(--line);
-            border-radius: 8px;
-            padding: 34px;
-            text-align: center;
-            color: var(--ink-soft);
-            background: var(--panel);
-            cursor: pointer;
-        }
-        
-        .dropzone.drag {
-            border-color: var(--teal);
-            background: var(--blue-bg);
-        }
-        
-        table {
-            border-collapse: collapse;
-            width: 100%;
-            font-size: 12.8px;
-        }
-        
-        th,
-        td {
-            border: 1px solid var(--line);
-            padding: 6px 9px;
-            text-align: left;
-            white-space: nowrap;
-            max-width: 240px;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-        
-        thead th {
-            position: sticky;
-            top: 0;
-            background: var(--panel);
-            z-index: 2;
-            cursor: pointer;
-            user-select: none;
-        }
-        
-        tbody tr:nth-child(even) {
-            background: rgba(0, 0, 0, .015);
-        }
-        
-        [data-theme="dark"] tbody tr:nth-child(even) {
-            background: rgba(255, 255, 255, .02);
-        }
-        
-        .table-scroll {
-            max-height: 520px;
-            overflow: auto;
-            border: 1px solid var(--line);
-            border-radius: var(--radius);
-        }
-        
-        td[contenteditable="true"]:focus {
-            outline: 2px solid var(--teal);
-            outline-offset: -2px;
-            background: var(--blue-bg);
-        }
-        
-        .badge {
-            display: inline-block;
-            padding: 2px 8px;
-            border-radius: 10px;
-            font-size: 11px;
-            font-weight: 700;
-        }
-        
-        .badge.pending {
-            background: var(--blue-bg);
-            color: var(--blue);
-        }
-        
-        .badge.verified {
-            background: var(--green-bg);
-            color: var(--green);
-        }
-        
-        .badge.error {
-            background: var(--red-bg);
-            color: var(--red);
-        }
-        
-        .badge.duplicate {
-            background: var(--amber-bg);
-            color: var(--amber);
-        }
-        
-        .badge.modified {
-            background: var(--amber-bg);
-            color: var(--amber);
-        }
-        
-        .row-flex {
-            display: flex;
-            gap: 14px;
-            flex-wrap: wrap;
-            align-items: center;
-        }
-        
-        label.field {
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-            font-size: 12.5px;
-            color: var(--ink-soft);
-            font-weight: 600;
-        }
-        
-        input[type=text],
-        input[type=number],
-        select,
-        textarea {
-            border: 1px solid var(--line);
-            border-radius: 5px;
-            padding: 6px 9px;
-            background: var(--panel);
-            color: var(--ink);
-        }
-        
-        textarea {
-            width: 100%;
-            min-height: 90px;
-            font-family: var(--mono);
-        }
-        
-        .pill {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            background: var(--paper);
-            border: 1px solid var(--line);
-            border-radius: 16px;
-            padding: 4px 10px;
-            font-size: 12px;
-        }
-        
-        .diff-old {
-            background: var(--red-bg);
-            text-decoration: line-through;
-            padding: 1px 3px;
-            border-radius: 3px;
-        }
-        
-        .diff-new {
-            background: var(--green-bg);
-            padding: 1px 3px;
-            border-radius: 3px;
-        }
-        
-        .verify-pane {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 16px;
-        }
-        
-        .verify-box {
-            background: var(--paper);
-            border: 1px solid var(--line);
-            border-radius: 8px;
-            padding: 14px;
-        }
-        
-        .verify-box h4 {
-            margin: 0 0 10px;
-            font-size: 12px;
-            text-transform: uppercase;
-            letter-spacing: .4px;
-            color: var(--ink-soft);
-        }
-        
-        .verify-field {
-            display: flex;
-            justify-content: space-between;
-            gap: 10px;
-            padding: 7px 0;
-            border-bottom: 1px dashed var(--line);
-            font-size: 13px;
-        }
-        
-        .kbd {
-            background: var(--panel);
-            border: 1px solid var(--line);
-            border-bottom-width: 2px;
-            border-radius: 4px;
-            padding: 1px 6px;
-            font-family: var(--mono);
-            font-size: 11px;
-        }
-        
-        .modal-bg {
-            position: fixed;
-            inset: 0;
-            background: rgba(10, 15, 25, .5);
-            display: none;
-            align-items: center;
-            justify-content: center;
-            z-index: 50;
-        }
-        
-        .modal-bg.active {
-            display: flex;
-        }
-        
-        .modal {
-            background: var(--panel);
-            border-radius: 10px;
-            padding: 20px;
-            width: 420px;
-            max-width: 90vw;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, .3);
-        }
-        
-        .modal h3 {
-            margin-top: 0;
-        }
-        
-        .toast-wrap {
-            position: fixed;
-            bottom: 16px;
-            right: 16px;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            z-index: 60;
-        }
-        
-        .toast {
-            background: var(--navy);
-            color: #fff;
-            padding: 10px 16px;
-            border-radius: 6px;
-            font-size: 13px;
-            box-shadow: 0 4px 14px rgba(0, 0, 0, .25);
-            animation: in .2s;
-        }
-        
-        @keyframes in {
-            from {
-                opacity: 0;
-                transform: translateY(6px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        
-        .stepper {
-            display: flex;
-            gap: 6px;
-            flex-wrap: wrap;
-            margin-bottom: 18px;
-        }
-        
-        .step {
-            padding: 6px 12px;
-            border-radius: 16px;
-            background: var(--panel);
-            border: 1px solid var(--line);
-            font-size: 12px;
-            color: var(--ink-soft);
-        }
-        
-        .step.done {
-            background: var(--green-bg);
-            color: var(--green);
-            border-color: var(--green);
-        }
-        
-        .step.now {
-            background: var(--teal);
-            color: #fff;
-            border-color: var(--teal-dark);
-            font-weight: 700;
-        }
-        
-        .quality-ring {
-            width: 110px;
-            height: 110px;
-        }
-        
-        .small {
-            font-size: 12px;
-            color: var(--ink-soft);
-        }
-        
-        .hr {
-            border: none;
-            border-top: 1px solid var(--line);
-            margin: 16px 0;
-        }
-        
-        .warn-box {
-            background: var(--amber-bg);
-            border: 1px solid var(--amber);
-            color: var(--amber);
-            border-radius: 6px;
-            padding: 10px 12px;
-            font-size: 12.5px;
-        }
-        
-        .err-box {
-            background: var(--red-bg);
-            border: 1px solid var(--red);
-            color: var(--red);
-            border-radius: 6px;
-            padding: 10px 12px;
-            font-size: 12.5px;
-        }
-        
-        .ok-box {
-            background: var(--green-bg);
-            border: 1px solid var(--green);
-            color: var(--green);
-            border-radius: 6px;
-            padding: 10px 12px;
-            font-size: 12.5px;
-        }
-        
-        .log-item {
-            font-size: 12.3px;
-            padding: 7px 0;
-            border-bottom: 1px solid var(--line);
-            display: flex;
-            justify-content: space-between;
-            gap: 10px;
-        }
-        
-        .log-item .t {
-            color: var(--ink-soft);
-            white-space: nowrap;
-            font-family: var(--mono);
-            font-size: 11px;
-        }
-        
-        .check-row {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            font-size: 12.5px;
-        }
-        
-        .col-tag {
-            background: var(--paper);
-            border: 1px solid var(--line);
-            border-radius: 5px;
-            padding: 2px 8px;
-            font-family: var(--mono);
-            font-size: 11.5px;
-        }
-        
-        .flex-between {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-        
-         ::-webkit-scrollbar {
-            width: 9px;
-            height: 9px;
-        }
-        
-         ::-webkit-scrollbar-thumb {
-            background: var(--line);
-            border-radius: 6px;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Data Entry Assistant - Free Online Data Entry Tool</title>
+<meta name="description" content="Free online Data Entry Assistant: import, clean, validate, deduplicate and verify your data in the browser. No signup, your data stays on your device.">
+<meta name="keywords" content="data entry, data entry assistant, free data entry tool, online data entry, data cleaning tool">
+<meta name="author" content="Harsh Yadav">
+<link rel="canonical" href="https://ydvharsh01.github.io/data-entry-assistant/">
+<meta property="og:title" content="Data Entry Assistant - Free Online Data Entry Tool">
+<meta property="og:description" content="Import, clean, validate and verify data entries right in your browser. No signup.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://ydvharsh01.github.io/data-entry-assistant/">
+<meta name="twitter:card" content="summary">
+<style>
+:root{
+  --navy:#0F1B33; --navy-2:#16264A; --navy-3:#1E3164;
+  --paper:#F4F5F7; --panel:#FFFFFF; --line:#DFE3EA;
+  --ink:#1B2333; --ink-soft:#5B6478;
+  --teal:#0E8C88; --teal-dark:#0A6D69;
+  --amber:#C77D06; --amber-bg:#FCEFD9;
+  --red:#C13B34; --red-bg:#FBE7E5;
+  --green:#1E8A4C; --green-bg:#E4F5EA;
+  --blue:#2A54C9; --blue-bg:#E7ECFB;
+  --mono: ui-monospace, SFMono-Regular, "Cascadia Mono", Consolas, monospace;
+  --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --radius:6px;
+  --shadow:0 1px 3px rgba(15,27,51,.08);
+}
+[data-theme="dark"]{
+  --paper:#0B1220; --panel:#121A2B; --line:#25324A;
+  --ink:#E7EAF2; --ink-soft:#9AA5BD;
+  --amber-bg:#3A2C0E; --red-bg:#3A1D1B; --green-bg:#123625; --blue-bg:#1A2547;
+}
+*{box-sizing:border-box;}
+html,body{height:100%;}
+body{
+  margin:0; font-family:var(--sans); background:var(--paper); color:var(--ink);
+  font-size:14px; line-height:1.45;
+}
+button, input, select, textarea{font-family:inherit; font-size:inherit; color:inherit;}
+button{cursor:pointer;}
+.app{display:grid; grid-template-columns:220px 1fr; min-height:100vh;}
+.sidebar{
+  background:var(--navy); color:#DDE3F5; padding:18px 0; position:sticky; top:0; height:100vh; overflow-y:auto;
+}
+.brand{padding:0 18px 16px; border-bottom:1px solid rgba(255,255,255,.08); margin-bottom:10px;}
+.brand .name{font-weight:700; font-size:15px; letter-spacing:.2px;}
+.brand .tag{font-size:11px; color:#8FA0CC; margin-top:2px;}
+.nav-item{
+  display:flex; align-items:center; gap:10px; padding:10px 18px; cursor:pointer; color:#C6CFE8;
+  border-left:3px solid transparent; font-size:13.5px;
+}
+.nav-item:hover{background:rgba(255,255,255,.05); color:#fff;}
+.nav-item.active{background:var(--navy-2); border-left-color:var(--teal); color:#fff; font-weight:600;}
+.nav-icon{width:18px; text-align:center; opacity:.9;}
+.nav-badge{margin-left:auto; background:var(--red); color:#fff; border-radius:10px; font-size:10.5px; padding:1px 6px; min-width:16px; text-align:center;}
+.main{padding:22px 26px 60px; max-width:1400px;}
+.topbar{display:flex; justify-content:space-between; align-items:center; margin-bottom:18px; gap:14px; flex-wrap:wrap;}
+.topbar h1{font-size:19px; margin:0;}
+.privacy-note{font-size:11.5px; color:var(--ink-soft); background:var(--panel); border:1px solid var(--line); padding:6px 10px; border-radius:var(--radius);}
+.view{display:none;}
+.view.active{display:block;}
+.card{background:var(--panel); border:1px solid var(--line); border-radius:var(--radius); padding:16px; box-shadow:var(--shadow);}
+.grid{display:grid; gap:14px;}
+.grid-4{grid-template-columns:repeat(4,1fr);}
+.grid-3{grid-template-columns:repeat(3,1fr);}
+.grid-2{grid-template-columns:repeat(2,1fr);}
+@media(max-width:1000px){.grid-4{grid-template-columns:repeat(2,1fr);} .grid-3{grid-template-columns:repeat(2,1fr);} .app{grid-template-columns:70px 1fr;} .brand .tag,.brand .name,.nav-item span.label{display:none;}}
+.stat{padding:14px;}
+.stat .n{font-size:26px; font-weight:700;}
+.stat .l{font-size:12px; color:var(--ink-soft); margin-top:2px;}
+.stat.err .n{color:var(--red);} .stat.warn .n{color:var(--amber);} .stat.ok .n{color:var(--green);}
+.section-title{font-size:14px; font-weight:700; margin:22px 0 10px; display:flex; align-items:center; gap:8px;}
+.btn{
+  background:var(--panel); border:1px solid var(--line); border-radius:var(--radius); padding:7px 13px;
+  font-size:13px; font-weight:600; color:var(--ink);
+}
+.btn:hover{border-color:var(--teal);}
+.btn.primary{background:var(--teal); border-color:var(--teal-dark); color:#fff;}
+.btn.primary:hover{background:var(--teal-dark);}
+.btn.danger{background:var(--red-bg); border-color:var(--red); color:var(--red);}
+.btn.ghost{background:transparent; border-color:transparent;}
+.btn:disabled{opacity:.45; cursor:not-allowed;}
+.btn-row{display:flex; gap:8px; flex-wrap:wrap; align-items:center;}
+.progress-wrap{background:var(--line); border-radius:20px; height:22px; overflow:hidden; position:relative;}
+.progress-bar{background:linear-gradient(90deg,var(--teal),var(--teal-dark)); height:100%; transition:width .3s;}
+.progress-label{position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-size:11.5px; font-weight:700; color:#fff; mix-blend-mode:difference;}
+.dropzone{
+  border:2px dashed var(--line); border-radius:8px; padding:34px; text-align:center; color:var(--ink-soft);
+  background:var(--panel); cursor:pointer;
+}
+.dropzone.drag{border-color:var(--teal); background:var(--blue-bg);}
+table{border-collapse:collapse; width:100%; font-size:12.8px;}
+th,td{border:1px solid var(--line); padding:6px 9px; text-align:left; white-space:nowrap; max-width:240px; overflow:hidden; text-overflow:ellipsis;}
+thead th{position:sticky; top:0; background:var(--panel); z-index:2; cursor:pointer; user-select:none;}
+tbody tr:nth-child(even){background:rgba(0,0,0,.015);}
+[data-theme="dark"] tbody tr:nth-child(even){background:rgba(255,255,255,.02);}
+.table-scroll{max-height:520px; overflow:auto; border:1px solid var(--line); border-radius:var(--radius);}
+td[contenteditable="true"]:focus{outline:2px solid var(--teal); outline-offset:-2px; background:var(--blue-bg);}
+.badge{display:inline-block; padding:2px 8px; border-radius:10px; font-size:11px; font-weight:700;}
+.badge.pending{background:var(--blue-bg); color:var(--blue);}
+.badge.verified{background:var(--green-bg); color:var(--green);}
+.badge.error{background:var(--red-bg); color:var(--red);}
+.badge.duplicate{background:var(--amber-bg); color:var(--amber);}
+.badge.modified{background:var(--amber-bg); color:var(--amber);}
+.row-flex{display:flex; gap:14px; flex-wrap:wrap; align-items:center;}
+label.field{display:flex; flex-direction:column; gap:4px; font-size:12.5px; color:var(--ink-soft); font-weight:600;}
+input[type=text], input[type=number], select, textarea{
+  border:1px solid var(--line); border-radius:5px; padding:6px 9px; background:var(--panel); color:var(--ink);
+}
+textarea{width:100%; min-height:90px; font-family:var(--mono);}
+.pill{display:inline-flex; align-items:center; gap:6px; background:var(--paper); border:1px solid var(--line); border-radius:16px; padding:4px 10px; font-size:12px;}
+.diff-old{background:var(--red-bg); text-decoration:line-through; padding:1px 3px; border-radius:3px;}
+.diff-new{background:var(--green-bg); padding:1px 3px; border-radius:3px;}
+.verify-pane{display:grid; grid-template-columns:1fr 1fr; gap:16px;}
+.verify-box{background:var(--paper); border:1px solid var(--line); border-radius:8px; padding:14px;}
+.verify-box h4{margin:0 0 10px; font-size:12px; text-transform:uppercase; letter-spacing:.4px; color:var(--ink-soft);}
+.verify-field{display:flex; justify-content:space-between; gap:10px; padding:7px 0; border-bottom:1px dashed var(--line); font-size:13px;}
+.kbd{background:var(--panel); border:1px solid var(--line); border-bottom-width:2px; border-radius:4px; padding:1px 6px; font-family:var(--mono); font-size:11px;}
+.modal-bg{position:fixed; inset:0; background:rgba(10,15,25,.5); display:none; align-items:center; justify-content:center; z-index:50;}
+.modal-bg.active{display:flex;}
+.modal{background:var(--panel); border-radius:10px; padding:20px; width:420px; max-width:90vw; box-shadow:0 10px 40px rgba(0,0,0,.3);}
+.modal h3{margin-top:0;}
+.toast-wrap{position:fixed; bottom:16px; right:16px; display:flex; flex-direction:column; gap:8px; z-index:60;}
+.toast{background:var(--navy); color:#fff; padding:10px 16px; border-radius:6px; font-size:13px; box-shadow:0 4px 14px rgba(0,0,0,.25); animation:in .2s;}
+@keyframes in{from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:translateY(0);}}
+.stepper{display:flex; gap:6px; flex-wrap:wrap; margin-bottom:18px;}
+.step{padding:6px 12px; border-radius:16px; background:var(--panel); border:1px solid var(--line); font-size:12px; color:var(--ink-soft);}
+.step.done{background:var(--green-bg); color:var(--green); border-color:var(--green);}
+.step.now{background:var(--teal); color:#fff; border-color:var(--teal-dark); font-weight:700;}
+.quality-ring{width:110px; height:110px;}
+.small{font-size:12px; color:var(--ink-soft);}
+.hr{border:none; border-top:1px solid var(--line); margin:16px 0;}
+.warn-box{background:var(--amber-bg); border:1px solid var(--amber); color:var(--amber); border-radius:6px; padding:10px 12px; font-size:12.5px;}
+.err-box{background:var(--red-bg); border:1px solid var(--red); color:var(--red); border-radius:6px; padding:10px 12px; font-size:12.5px;}
+.ok-box{background:var(--green-bg); border:1px solid var(--green); color:var(--green); border-radius:6px; padding:10px 12px; font-size:12.5px;}
+.log-item{font-size:12.3px; padding:7px 0; border-bottom:1px solid var(--line); display:flex; justify-content:space-between; gap:10px;}
+.log-item .t{color:var(--ink-soft); white-space:nowrap; font-family:var(--mono); font-size:11px;}
+.check-row{display:flex; align-items:center; gap:6px; font-size:12.5px;}
+.col-tag{background:var(--paper); border:1px solid var(--line); border-radius:5px; padding:2px 8px; font-family:var(--mono); font-size:11.5px;}
+.flex-between{display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;}
+::-webkit-scrollbar{width:9px; height:9px;}
+::-webkit-scrollbar-thumb{background:var(--line); border-radius:6px;}
+</style>
 </head>
-
 <body data-theme="light">
-    <div class="app">
-        <div class="sidebar">
-            <div class="brand">
-                <div class="name">📋 Data Entry Assistant</div>
-                <div class="tag">Offline · Local-only · No account</div>
-            </div>
-            <div class="nav-item active" data-view="dashboard"><span class="nav-icon">🏠</span><span class="label">Dashboard</span></div>
-            <div class="nav-item" data-view="import"><span class="nav-icon">📥</span><span class="label">Import</span></div>
-            <div class="nav-item" data-view="table"><span class="nav-icon">🗂️</span><span class="label">Data Table</span></div>
-            <div class="nav-item" data-view="clean"><span class="nav-icon">🧹</span><span class="label">Clean</span></div>
-            <div class="nav-item" data-view="validate"><span class="nav-icon">✅</span><span class="label">Validate</span><span class="nav-badge" id="badge-validate" style="display:none">0</span></div>
-            <div class="nav-item" data-view="duplicates"><span class="nav-icon">🧩</span><span class="label">Duplicates</span><span class="nav-badge" id="badge-dupes" style="display:none">0</span></div>
-            <div class="nav-item" data-view="verify"><span class="nav-icon">🔍</span><span class="label">Verify</span></div>
-            <div class="nav-item" data-view="fastentry"><span class="nav-icon">⌨️</span><span class="label">Fast Entry</span></div>
-            <div class="nav-item" data-view="errors"><span class="nav-icon">🚨</span><span class="label">Error Center</span></div>
-            <div class="nav-item" data-view="export"><span class="nav-icon">📤</span><span class="label">Export</span></div>
-            <div class="nav-item" data-view="settings"><span class="nav-icon">⚙️</span><span class="label">Settings</span></div>
-            <div class="nav-item" data-view="log"><span class="nav-icon">🗒️</span><span class="label">Activity Log</span></div>
+<div class="app">
+  <div class="sidebar">
+    <div class="brand">
+      <div class="name">📋 Data Entry Assistant</div>
+      <div class="tag">Offline · Local-only · No account</div>
+    </div>
+    <div class="nav-item active" data-view="dashboard"><span class="nav-icon">🏠</span><span class="label">Dashboard</span></div>
+    <div class="nav-item" data-view="import"><span class="nav-icon">📥</span><span class="label">Import</span></div>
+    <div class="nav-item" data-view="table"><span class="nav-icon">🗂️</span><span class="label">Data Table</span></div>
+    <div class="nav-item" data-view="clean"><span class="nav-icon">🧹</span><span class="label">Clean</span></div>
+    <div class="nav-item" data-view="validate"><span class="nav-icon">✅</span><span class="label">Validate</span><span class="nav-badge" id="badge-validate" style="display:none">0</span></div>
+    <div class="nav-item" data-view="duplicates"><span class="nav-icon">🧩</span><span class="label">Duplicates</span><span class="nav-badge" id="badge-dupes" style="display:none">0</span></div>
+    <div class="nav-item" data-view="verify"><span class="nav-icon">🔍</span><span class="label">Verify</span></div>
+    <div class="nav-item" data-view="fastentry"><span class="nav-icon">⌨️</span><span class="label">Fast Entry</span></div>
+    <div class="nav-item" data-view="errors"><span class="nav-icon">🚨</span><span class="label">Error Center</span></div>
+    <div class="nav-item" data-view="export"><span class="nav-icon">📤</span><span class="label">Export</span></div>
+    <div class="nav-item" data-view="settings"><span class="nav-icon">⚙️</span><span class="label">Settings</span></div>
+    <div class="nav-item" data-view="log"><span class="nav-icon">🗒️</span><span class="label">Activity Log</span></div>
+  </div>
+
+  <div class="main">
+    <div class="topbar">
+      <h1 id="view-title">Dashboard</h1>
+      <div class="row-flex">
+        <div class="privacy-note">🔒 Your data stays in this browser unless you explicitly export or upload it.</div>
+        <button class="btn" id="theme-toggle">🌙 Dark mode</button>
+      </div>
+    </div>
+
+    <div class="stepper" id="stepper"></div>
+
+    <!-- DASHBOARD -->
+    <div class="view active" id="view-dashboard">
+      <div class="grid grid-4">
+        <div class="card stat"><div class="n" id="stat-total">0</div><div class="l">Total records</div></div>
+        <div class="card stat ok"><div class="n" id="stat-completed">0</div><div class="l">Completed / Verified</div></div>
+        <div class="card stat warn"><div class="n" id="stat-pending">0</div><div class="l">Pending</div></div>
+        <div class="card stat err"><div class="n" id="stat-errors">0</div><div class="l">Error records</div></div>
+        <div class="card stat warn"><div class="n" id="stat-dupes">0</div><div class="l">Duplicate records</div></div>
+        <div class="card stat ok"><div class="n" id="stat-verified">0</div><div class="l">Verified</div></div>
+        <div class="card stat"><div class="n" id="stat-remaining">0</div><div class="l">Estimated remaining</div></div>
+        <div class="card stat"><div class="n" id="stat-quality">–</div><div class="l">Data quality score</div></div>
+      </div>
+
+      <div class="section-title">Processing progress</div>
+      <div class="card">
+        <div class="progress-wrap"><div class="progress-bar" id="progress-bar" style="width:0%"></div><div class="progress-label" id="progress-label">0 / 0 · 0%</div></div>
+        <div class="btn-row" style="margin-top:14px;">
+          <button class="btn primary" id="btn-start">▶ Start</button>
+          <button class="btn" id="btn-pause">⏸ Pause</button>
+          <button class="btn" id="btn-resume">⏵ Resume</button>
+          <button class="btn danger" id="btn-stop">⏹ Stop</button>
+          <span class="pill" id="session-state">Session: idle</span>
         </div>
+        <div class="small" style="margin-top:8px;">Start/Pause/Resume/Stop control the active Verify / Fast Entry session. They don't affect data on disk — nothing is uploaded anywhere.</div>
+      </div>
 
-        <div class="main">
-            <div class="topbar">
-                <h1 id="view-title">Dashboard</h1>
-                <div class="row-flex">
-                    <div class="privacy-note">🔒 Your data stays in this browser unless you explicitly export or upload it.</div>
-                    <button class="btn" id="theme-toggle">🌙 Dark mode</button>
-                </div>
-            </div>
+      <div class="section-title">Quick actions</div>
+      <div class="btn-row">
+        <button class="btn primary" id="quick-demo">🎲 Load Demo Data</button>
+        <button class="btn" id="quick-import" data-view-link="import">📥 Import data</button>
+        <button class="btn" id="quick-verify" data-view-link="verify">🔍 Go to Verify</button>
+        <button class="btn" id="quick-export" data-view-link="export">📤 Export</button>
+      </div>
+    </div>
 
-            <div class="stepper" id="stepper"></div>
+    <!-- IMPORT -->
+    <div class="view" id="view-import">
+      <div class="card">
+        <div class="dropzone" id="dropzone">
+          <div style="font-size:28px;">📄</div>
+          <div><strong>Drag & drop</strong> a CSV, JSON or TXT file here, or click to browse</div>
+          <div class="small" style="margin-top:6px;">Supported: .csv · .json · .txt (XLSX needs a conversion step — see note below)</div>
+          <input type="file" id="file-input" accept=".csv,.json,.txt,.xlsx" style="display:none">
+        </div>
+        <div class="warn-box" style="margin-top:12px;" id="xlsx-note" style="display:none;"></div>
+      </div>
 
-            <!-- DASHBOARD -->
-            <div class="view active" id="view-dashboard">
-                <div class="grid grid-4">
-                    <div class="card stat">
-                        <div class="n" id="stat-total">0</div>
-                        <div class="l">Total records</div>
-                    </div>
-                    <div class="card stat ok">
-                        <div class="n" id="stat-completed">0</div>
-                        <div class="l">Completed / Verified</div>
-                    </div>
-                    <div class="card stat warn">
-                        <div class="n" id="stat-pending">0</div>
-                        <div class="l">Pending</div>
-                    </div>
-                    <div class="card stat err">
-                        <div class="n" id="stat-errors">0</div>
-                        <div class="l">Error records</div>
-                    </div>
-                    <div class="card stat warn">
-                        <div class="n" id="stat-dupes">0</div>
-                        <div class="l">Duplicate records</div>
-                    </div>
-                    <div class="card stat ok">
-                        <div class="n" id="stat-verified">0</div>
-                        <div class="l">Verified</div>
-                    </div>
-                    <div class="card stat">
-                        <div class="n" id="stat-remaining">0</div>
-                        <div class="l">Estimated remaining</div>
-                    </div>
-                    <div class="card stat">
-                        <div class="n" id="stat-quality">–</div>
-                        <div class="l">Data quality score</div>
-                    </div>
-                </div>
+      <div class="section-title">Or paste tabular / unstructured text</div>
+      <div class="card">
+        <textarea id="paste-area" placeholder="Paste CSV/tab-separated rows, JSON, or unstructured text like:&#10;Name: Rahul Sharma&#10;Phone: 9876543210&#10;City: Delhi&#10;Order ID: OR1234"></textarea>
+        <div class="btn-row" style="margin-top:10px;">
+          <button class="btn primary" id="btn-parse-paste">Extract & Import</button>
+          <span class="small">Fields that can't be confidently identified are marked <span class="col-tag">REVIEW REQUIRED</span> instead of guessed.</span>
+        </div>
+      </div>
 
-                <div class="section-title">Processing progress</div>
-                <div class="card">
-                    <div class="progress-wrap">
-                        <div class="progress-bar" id="progress-bar" style="width:0%"></div>
-                        <div class="progress-label" id="progress-label">0 / 0 · 0%</div>
-                    </div>
-                    <div class="btn-row" style="margin-top:14px;">
-                        <button class="btn primary" id="btn-start">▶ Start</button>
-                        <button class="btn" id="btn-pause">⏸ Pause</button>
-                        <button class="btn" id="btn-resume">⏵ Resume</button>
-                        <button class="btn danger" id="btn-stop">⏹ Stop</button>
-                        <span class="pill" id="session-state">Session: idle</span>
-                    </div>
-                    <div class="small" style="margin-top:8px;">Start/Pause/Resume/Stop control the active Verify / Fast Entry session. They don't affect data on disk — nothing is uploaded anywhere.</div>
-                </div>
+      <div class="section-title">Manual entry</div>
+      <div class="card">
+        <div class="small">Define column names (comma-separated), then add rows manually in the Data Table view.</div>
+        <div class="btn-row" style="margin-top:10px;">
+          <input type="text" id="manual-columns" placeholder="e.g. Name, Phone, Email, City, Order ID" style="min-width:320px;">
+          <button class="btn" id="btn-manual-cols">Create empty dataset</button>
+        </div>
+      </div>
 
-                <div class="section-title">Quick actions</div>
-                <div class="btn-row">
-                    <button class="btn primary" id="quick-demo">🎲 Load Demo Data</button>
-                    <button class="btn" id="quick-import" data-view-link="import">📥 Import data</button>
-                    <button class="btn" id="quick-verify" data-view-link="verify">🔍 Go to Verify</button>
-                    <button class="btn" id="quick-export" data-view-link="export">📤 Export</button>
-                </div>
-            </div>
+      <div id="import-preview-wrap" style="display:none;">
+        <div class="section-title">Preview & detected issues</div>
+        <div class="card" id="import-summary"></div>
+        <div class="table-scroll" style="margin-top:12px;" id="import-preview-table"></div>
+      </div>
+    </div>
 
-            <!-- IMPORT -->
-            <div class="view" id="view-import">
-                <div class="card">
-                    <div class="dropzone" id="dropzone">
-                        <div style="font-size:28px;">📄</div>
-                        <div><strong>Drag & drop</strong> a CSV, JSON or TXT file here, or click to browse</div>
-                        <div class="small" style="margin-top:6px;">Supported: .csv · .json · .txt (XLSX needs a conversion step — see note below)</div>
-                        <input type="file" id="file-input" accept=".csv,.json,.txt,.xlsx" style="display:none">
-                    </div>
-                    <div class="warn-box" style="margin-top:12px;" id="xlsx-note" style="display:none;"></div>
-                </div>
-
-                <div class="section-title">Or paste tabular / unstructured text</div>
-                <div class="card">
-                    <textarea id="paste-area" placeholder="Paste CSV/tab-separated rows, JSON, or unstructured text like:&#10;Name: Rahul Sharma&#10;Phone: 9876543210&#10;City: Delhi&#10;Order ID: OR1234"></textarea>
-                    <div class="btn-row" style="margin-top:10px;">
-                        <button class="btn primary" id="btn-parse-paste">Extract & Import</button>
-                        <span class="small">Fields that can't be confidently identified are marked <span class="col-tag">REVIEW REQUIRED</span> instead of guessed.</span>
-                    </div>
-                </div>
-
-                <div class="section-title">Manual entry</div>
-                <div class="card">
-                    <div class="small">Define column names (comma-separated), then add rows manually in the Data Table view.</div>
-                    <div class="btn-row" style="margin-top:10px;">
-                        <input type="text" id="manual-columns" placeholder="e.g. Name, Phone, Email, City, Order ID" style="min-width:320px;">
-                        <button class="btn" id="btn-manual-cols">Create empty dataset</button>
-                    </div>
-                </div>
-
-                <div id="import-preview-wrap" style="display:none;">
-                    <div class="section-title">Preview & detected issues</div>
-                    <div class="card" id="import-summary"></div>
-                    <div class="table-scroll" style="margin-top:12px;" id="import-preview-table"></div>
-                </div>
-            </div>
-
-            <!-- DATA TABLE -->
-            <div class="view" id="view-table">
-                <div class="card">
-                    <div class="flex-between">
-                        <div class="row-flex">
-                            <input type="text" id="table-search" placeholder="Search all columns…" style="min-width:220px;">
-                            <select id="table-filter-status">
+    <!-- DATA TABLE -->
+    <div class="view" id="view-table">
+      <div class="card">
+        <div class="flex-between">
+          <div class="row-flex">
+            <input type="text" id="table-search" placeholder="Search all columns…" style="min-width:220px;">
+            <select id="table-filter-status">
               <option value="all">All statuses</option>
               <option value="pending">Pending</option>
               <option value="verified">Verified</option>
@@ -862,697 +263,509 @@
               <option value="duplicate">Duplicates</option>
               <option value="modified">Modified</option>
             </select>
-                            <button class="btn ghost" id="btn-clear-filters">Clear filters</button>
-                        </div>
-                        <div class="row-flex">
-                            <button class="btn" id="btn-add-row">+ Row</button>
-                            <button class="btn" id="btn-add-col">+ Column</button>
-                            <button class="btn" id="btn-undo">↶ Undo</button>
-                            <button class="btn" id="btn-redo">↷ Redo</button>
-                            <button class="btn danger" id="btn-delete-selected">Delete selected</button>
-                        </div>
-                    </div>
-                </div>
-                <div class="table-scroll" style="margin-top:12px;" id="data-table-wrap"></div>
-                <div class="flex-between" style="margin-top:10px;">
-                    <div class="small" id="table-count"></div>
-                    <div class="row-flex">
-                        <button class="btn" id="page-prev">‹ Prev</button>
-                        <span class="small" id="page-info">Page 1</span>
-                        <button class="btn" id="page-next">Next ›</button>
-                    </div>
-                </div>
-            </div>
+            <button class="btn ghost" id="btn-clear-filters">Clear filters</button>
+          </div>
+          <div class="row-flex">
+            <button class="btn" id="btn-add-row">+ Row</button>
+            <button class="btn" id="btn-add-col">+ Column</button>
+            <button class="btn" id="btn-undo">↶ Undo</button>
+            <button class="btn" id="btn-redo">↷ Redo</button>
+            <button class="btn danger" id="btn-delete-selected">Delete selected</button>
+          </div>
+        </div>
+      </div>
+      <div class="table-scroll" style="margin-top:12px;" id="data-table-wrap"></div>
+      <div class="flex-between" style="margin-top:10px;">
+        <div class="small" id="table-count"></div>
+        <div class="row-flex">
+          <button class="btn" id="page-prev">‹ Prev</button>
+          <span class="small" id="page-info">Page 1</span>
+          <button class="btn" id="page-next">Next ›</button>
+        </div>
+      </div>
+    </div>
 
-            <!-- CLEAN -->
-            <div class="view" id="view-clean">
-                <div class="card">
-                    <div class="small" style="margin-bottom:10px;">One-click cleaning tools. Ambiguous values are never changed automatically — only formatting-level fixes are applied.</div>
-                    <div class="grid grid-3">
-                        <label class="check-row"><input type="checkbox" class="clean-op" value="trim" checked> Trim whitespace / remove extra spaces</label>
-                        <label class="check-row"><input type="checkbox" class="clean-op" value="case" checked> Normalize name capitalization</label>
-                        <label class="check-row"><input type="checkbox" class="clean-op" value="phone"> Flag invalid phone numbers</label>
-                        <label class="check-row"><input type="checkbox" class="clean-op" value="email"> Flag invalid emails</label>
-                        <label class="check-row"><input type="checkbox" class="clean-op" value="date"> Standardize dates (YYYY-MM-DD)</label>
-                        <label class="check-row"><input type="checkbox" class="clean-op" value="number"> Standardize numbers</label>
-                        <label class="check-row"><input type="checkbox" class="clean-op" value="chars"> Flag suspicious characters</label>
-                        <label class="check-row"><input type="checkbox" class="clean-op" value="empty"> Detect empty cells</label>
-                    </div>
-                    <div class="btn-row" style="margin-top:14px;">
-                        <button class="btn primary" id="btn-clean-run">Clean Data</button>
-                        <button class="btn" id="btn-clean-undo">Undo Changes (revert to original import)</button>
-                    </div>
-                </div>
-                <div class="section-title">Cleaning report</div>
-                <div class="card" id="clean-report"><span class="small">Run cleaning to see a report of what changed.</span></div>
-            </div>
+    <!-- CLEAN -->
+    <div class="view" id="view-clean">
+      <div class="card">
+        <div class="small" style="margin-bottom:10px;">One-click cleaning tools. Ambiguous values are never changed automatically — only formatting-level fixes are applied.</div>
+        <div class="grid grid-3">
+          <label class="check-row"><input type="checkbox" class="clean-op" value="trim" checked> Trim whitespace / remove extra spaces</label>
+          <label class="check-row"><input type="checkbox" class="clean-op" value="case" checked> Normalize name capitalization</label>
+          <label class="check-row"><input type="checkbox" class="clean-op" value="phone"> Flag invalid phone numbers</label>
+          <label class="check-row"><input type="checkbox" class="clean-op" value="email"> Flag invalid emails</label>
+          <label class="check-row"><input type="checkbox" class="clean-op" value="date"> Standardize dates (YYYY-MM-DD)</label>
+          <label class="check-row"><input type="checkbox" class="clean-op" value="number"> Standardize numbers</label>
+          <label class="check-row"><input type="checkbox" class="clean-op" value="chars"> Flag suspicious characters</label>
+          <label class="check-row"><input type="checkbox" class="clean-op" value="empty"> Detect empty cells</label>
+        </div>
+        <div class="btn-row" style="margin-top:14px;">
+          <button class="btn primary" id="btn-clean-run">Clean Data</button>
+          <button class="btn" id="btn-clean-undo">Undo Changes (revert to original import)</button>
+        </div>
+      </div>
+      <div class="section-title">Cleaning report</div>
+      <div class="card" id="clean-report"><span class="small">Run cleaning to see a report of what changed.</span></div>
+    </div>
 
-            <!-- VALIDATE -->
-            <div class="view" id="view-validate">
-                <div class="card">
-                    <div class="small">Define a rule per column, then run validation. Custom regex is supported.</div>
-                    <div id="validation-rules-wrap" style="margin-top:10px;"></div>
-                    <div class="btn-row" style="margin-top:12px;">
-                        <button class="btn primary" id="btn-run-validation">Run Validation</button>
-                    </div>
-                </div>
-                <div class="section-title">Validation results</div>
-                <div class="card" id="validation-summary"><span class="small">No validation run yet.</span></div>
-                <div class="table-scroll" style="margin-top:10px;" id="validation-table"></div>
-            </div>
+    <!-- VALIDATE -->
+    <div class="view" id="view-validate">
+      <div class="card">
+        <div class="small">Define a rule per column, then run validation. Custom regex is supported.</div>
+        <div id="validation-rules-wrap" style="margin-top:10px;"></div>
+        <div class="btn-row" style="margin-top:12px;">
+          <button class="btn primary" id="btn-run-validation">Run Validation</button>
+        </div>
+      </div>
+      <div class="section-title">Validation results</div>
+      <div class="card" id="validation-summary"><span class="small">No validation run yet.</span></div>
+      <div class="table-scroll" style="margin-top:10px;" id="validation-table"></div>
+    </div>
 
-            <!-- DUPLICATES -->
-            <div class="view" id="view-duplicates">
-                <div class="card">
-                    <div class="row-flex">
-                        <label class="field">Detect duplicates by
+    <!-- DUPLICATES -->
+    <div class="view" id="view-duplicates">
+      <div class="card">
+        <div class="row-flex">
+          <label class="field">Detect duplicates by
             <select id="dupe-mode">
               <option value="row">Entire row</option>
               <option value="column">Specific column(s)</option>
             </select>
           </label>
-                        <div id="dupe-columns-wrap"></div>
-                        <button class="btn primary" id="btn-run-dupes" style="align-self:flex-end;">Detect Duplicates</button>
-                    </div>
-                </div>
-                <div class="section-title">Duplicate groups</div>
-                <div id="dupe-groups"><span class="small">Run detection to see duplicate groups.</span></div>
-            </div>
+          <div id="dupe-columns-wrap"></div>
+          <button class="btn primary" id="btn-run-dupes" style="align-self:flex-end;">Detect Duplicates</button>
+        </div>
+      </div>
+      <div class="section-title">Duplicate groups</div>
+      <div id="dupe-groups"><span class="small">Run detection to see duplicate groups.</span></div>
+    </div>
 
-            <!-- VERIFY -->
-            <div class="view" id="view-verify">
-                <div class="card flex-between">
-                    <div class="row-flex">
-                        <span class="pill" id="verify-position">Record 0 / 0</span>
-                        <span class="small">Shortcuts: <span class="kbd">Enter</span> next · <span class="kbd">Ctrl+Enter</span> verify · <span class="kbd">Esc</span> cancel edit · <span class="kbd">←/→</span> navigate · <span class="kbd">Ctrl+Z</span>                        undo</span>
-                    </div>
-                    <div class="row-flex">
-                        <button class="btn" id="verify-prev-err">‹ Prev issue</button>
-                        <button class="btn" id="verify-next-err">Next issue ›</button>
-                    </div>
-                </div>
-                <div class="verify-pane" style="margin-top:14px;">
-                    <div class="verify-box">
-                        <h4>Source data (original)</h4>
-                        <div id="verify-source"></div>
-                    </div>
-                    <div class="verify-box">
-                        <h4>Entered / cleaned data</h4>
-                        <div id="verify-entered"></div>
-                    </div>
-                </div>
-                <div class="btn-row" style="margin-top:14px;">
-                    <button class="btn primary" id="verify-accept">✔ Accept</button>
-                    <button class="btn danger" id="verify-reject">✘ Reject (revert)</button>
-                    <button class="btn" id="verify-edit">✎ Edit</button>
-                    <button class="btn" id="verify-prev">← Previous</button>
-                    <button class="btn" id="verify-next">Next →</button>
-                    <button class="btn ghost" id="verify-mark">Mark Verified</button>
-                </div>
-            </div>
+    <!-- VERIFY -->
+    <div class="view" id="view-verify">
+      <div class="card flex-between">
+        <div class="row-flex">
+          <span class="pill" id="verify-position">Record 0 / 0</span>
+          <span class="small">Shortcuts: <span class="kbd">Enter</span> next · <span class="kbd">Ctrl+Enter</span> verify · <span class="kbd">Esc</span> cancel edit · <span class="kbd">←/→</span> navigate · <span class="kbd">Ctrl+Z</span> undo</span>
+        </div>
+        <div class="row-flex">
+          <button class="btn" id="verify-prev-err">‹ Prev issue</button>
+          <button class="btn" id="verify-next-err">Next issue ›</button>
+        </div>
+      </div>
+      <div class="verify-pane" style="margin-top:14px;">
+        <div class="verify-box"><h4>Source data (original)</h4><div id="verify-source"></div></div>
+        <div class="verify-box"><h4>Entered / cleaned data</h4><div id="verify-entered"></div></div>
+      </div>
+      <div class="btn-row" style="margin-top:14px;">
+        <button class="btn primary" id="verify-accept">✔ Accept</button>
+        <button class="btn danger" id="verify-reject">✘ Reject (revert)</button>
+        <button class="btn" id="verify-edit">✎ Edit</button>
+        <button class="btn" id="verify-prev">← Previous</button>
+        <button class="btn" id="verify-next">Next →</button>
+        <button class="btn ghost" id="verify-mark">Mark Verified</button>
+      </div>
+    </div>
 
-            <!-- FAST ENTRY -->
-            <div class="view" id="view-fastentry">
-                <div class="card">
-                    <label class="check-row"><input type="checkbox" id="auto-next-toggle"> Auto move to next record after verification</label>
-                    <div class="hr"></div>
-                    <div id="fastentry-form" class="grid grid-2"></div>
-                    <div class="btn-row" style="margin-top:14px;">
-                        <button class="btn primary" id="fastentry-save">Save & Next (Enter)</button>
-                        <button class="btn" id="fastentry-new">+ New blank record</button>
-                    </div>
-                    <div class="small" style="margin-top:8px;">Tab / Enter moves to the next field. Required fields are highlighted. Auto-saves locally as you type.</div>
-                </div>
-            </div>
+    <!-- FAST ENTRY -->
+    <div class="view" id="view-fastentry">
+      <div class="card">
+        <label class="check-row"><input type="checkbox" id="auto-next-toggle"> Auto move to next record after verification</label>
+        <div class="hr"></div>
+        <div id="fastentry-form" class="grid grid-2"></div>
+        <div class="btn-row" style="margin-top:14px;">
+          <button class="btn primary" id="fastentry-save">Save & Next (Enter)</button>
+          <button class="btn" id="fastentry-new">+ New blank record</button>
+        </div>
+        <div class="small" style="margin-top:8px;">Tab / Enter moves to the next field. Required fields are highlighted. Auto-saves locally as you type.</div>
+      </div>
+    </div>
 
-            <!-- ERROR CENTER -->
-            <div class="view" id="view-errors">
-                <div class="card" id="error-summary"><span class="small">No errors detected yet — run Validation first.</span></div>
-                <div class="table-scroll" style="margin-top:10px;" id="error-table"></div>
-            </div>
+    <!-- ERROR CENTER -->
+    <div class="view" id="view-errors">
+      <div class="card" id="error-summary"><span class="small">No errors detected yet — run Validation first.</span></div>
+      <div class="table-scroll" style="margin-top:10px;" id="error-table"></div>
+    </div>
 
-            <!-- EXPORT -->
-            <div class="view" id="view-export">
-                <div class="grid grid-3">
-                    <div class="card">
-                        <h3 style="margin-top:0;">Full dataset</h3>
-                        <div class="btn-row"><button class="btn primary" data-export="all-csv">Export CSV</button><button class="btn" data-export="all-json">Export JSON</button></div>
-                    </div>
-                    <div class="card">
-                        <h3 style="margin-top:0;">Cleaned data</h3>
-                        <div class="btn-row"><button class="btn primary" data-export="cleaned-csv">Export CSV</button><button class="btn" data-export="cleaned-json">Export JSON</button></div>
-                    </div>
-                    <div class="card">
-                        <h3 style="margin-top:0;">Verified records</h3>
-                        <div class="btn-row"><button class="btn primary" data-export="verified-csv">Export CSV</button><button class="btn" data-export="verified-json">Export JSON</button></div>
-                    </div>
-                    <div class="card">
-                        <h3 style="margin-top:0;">Error records</h3>
-                        <div class="btn-row"><button class="btn primary" data-export="errors-csv">Export CSV</button></div>
-                    </div>
-                    <div class="card">
-                        <h3 style="margin-top:0;">Duplicate records</h3>
-                        <div class="btn-row"><button class="btn primary" data-export="dupes-csv">Export CSV</button></div>
-                    </div>
-                    <div class="card">
-                        <h3 style="margin-top:0;">Full project backup</h3>
-                        <div class="btn-row"><button class="btn primary" id="btn-backup">Create Backup (.json)</button></div>
-                        <div class="hr"></div>
-                        <input type="file" id="restore-input" accept=".json">
-                        <button class="btn" id="btn-restore">Restore Backup</button>
-                    </div>
-                </div>
-                <div class="warn-box" style="margin-top:14px;">Note: true .xlsx export isn't included (it needs a binary spreadsheet library, which would break the "single offline file, no CDN" requirement). CSV opens directly in Excel/Sheets, so it's provided instead.</div>
-            </div>
+    <!-- EXPORT -->
+    <div class="view" id="view-export">
+      <div class="grid grid-3">
+        <div class="card"><h3 style="margin-top:0;">Full dataset</h3><div class="btn-row"><button class="btn primary" data-export="all-csv">Export CSV</button><button class="btn" data-export="all-json">Export JSON</button></div></div>
+        <div class="card"><h3 style="margin-top:0;">Cleaned data</h3><div class="btn-row"><button class="btn primary" data-export="cleaned-csv">Export CSV</button><button class="btn" data-export="cleaned-json">Export JSON</button></div></div>
+        <div class="card"><h3 style="margin-top:0;">Verified records</h3><div class="btn-row"><button class="btn primary" data-export="verified-csv">Export CSV</button><button class="btn" data-export="verified-json">Export JSON</button></div></div>
+        <div class="card"><h3 style="margin-top:0;">Error records</h3><div class="btn-row"><button class="btn primary" data-export="errors-csv">Export CSV</button></div></div>
+        <div class="card"><h3 style="margin-top:0;">Duplicate records</h3><div class="btn-row"><button class="btn primary" data-export="dupes-csv">Export CSV</button></div></div>
+        <div class="card"><h3 style="margin-top:0;">Full project backup</h3><div class="btn-row"><button class="btn primary" id="btn-backup">Create Backup (.json)</button></div>
+          <div class="hr"></div>
+          <input type="file" id="restore-input" accept=".json">
+          <button class="btn" id="btn-restore">Restore Backup</button>
+        </div>
+      </div>
+      <div class="warn-box" style="margin-top:14px;">Note: true .xlsx export isn't included (it needs a binary spreadsheet library, which would break the "single offline file, no CDN" requirement). CSV opens directly in Excel/Sheets, so it's provided instead.</div>
+    </div>
 
-            <!-- SETTINGS -->
-            <div class="view" id="view-settings">
-                <div class="card grid grid-2">
-                    <label class="field">Date format
+    <!-- SETTINGS -->
+    <div class="view" id="view-settings">
+      <div class="card grid grid-2">
+        <label class="field">Date format
           <select id="set-dateformat"><option value="YYYY-MM-DD">YYYY-MM-DD</option><option value="DD/MM/YYYY">DD/MM/YYYY</option><option value="MM/DD/YYYY">MM/DD/YYYY</option></select>
         </label>
-                    <label class="field">Name capitalization
+        <label class="field">Name capitalization
           <select id="set-capitalization"><option value="title">Title Case</option><option value="upper">UPPER CASE</option><option value="lower">lower case</option><option value="none">Leave as-is</option></select>
         </label>
-                    <label class="field">Auto-save interval (seconds)
+        <label class="field">Auto-save interval (seconds)
           <input type="number" id="set-autosave" min="5" value="20">
         </label>
-                    <label class="field">Validation strictness
+        <label class="field">Validation strictness
           <select id="set-strictness"><option value="normal">Normal</option><option value="strict">Strict</option><option value="lenient">Lenient</option></select>
         </label>
-                    <label class="field">Duplicate sensitivity
+        <label class="field">Duplicate sensitivity
           <select id="set-dupe-sensitivity"><option value="exact">Exact match</option><option value="loose">Loose (case/space-insensitive)</option></select>
         </label>
-                    <label class="field">Rows per page
+        <label class="field">Rows per page
           <select id="set-rowsperpage"><option>25</option><option selected>50</option><option>100</option><option>250</option></select>
         </label>
-                </div>
-                <div class="btn-row" style="margin-top:14px;">
-                    <button class="btn primary" id="btn-save-settings">Save Settings</button>
-                    <button class="btn danger" id="btn-clear-local">Clear Local Data</button>
-                </div>
-                <div class="warn-box" style="margin-top:14px;">Browser local storage is convenient but is <strong>not</strong> a substitute for your organization's official backup / data-retention systems. Export regularly.</div>
-            </div>
-
-            <!-- ACTIVITY LOG -->
-            <div class="view" id="view-log">
-                <div class="card" id="log-list"><span class="small">No activity yet.</span></div>
-            </div>
-        </div>
+      </div>
+      <div class="btn-row" style="margin-top:14px;">
+        <button class="btn primary" id="btn-save-settings">Save Settings</button>
+        <button class="btn danger" id="btn-clear-local">Clear Local Data</button>
+      </div>
+      <div class="warn-box" style="margin-top:14px;">Browser local storage is convenient but is <strong>not</strong> a substitute for your organization's official backup / data-retention systems. Export regularly.</div>
     </div>
 
-    <div class="modal-bg" id="modal-bg">
-        <div class="modal">
-            <h3 id="modal-title">Confirm</h3>
-            <div id="modal-body" class="small"></div>
-            <div class="btn-row" style="margin-top:16px; justify-content:flex-end;">
-                <button class="btn" id="modal-cancel">Cancel</button>
-                <button class="btn danger" id="modal-confirm">Confirm</button>
-            </div>
-        </div>
+    <!-- ACTIVITY LOG -->
+    <div class="view" id="view-log">
+      <div class="card" id="log-list"><span class="small">No activity yet.</span></div>
     </div>
-    <div class="toast-wrap" id="toast-wrap"></div>
+  </div>
+</div>
 
-    <script>
-        (function() {
-                "use strict";
+<div class="modal-bg" id="modal-bg">
+  <div class="modal">
+    <h3 id="modal-title">Confirm</h3>
+    <div id="modal-body" class="small"></div>
+    <div class="btn-row" style="margin-top:16px; justify-content:flex-end;">
+      <button class="btn" id="modal-cancel">Cancel</button>
+      <button class="btn danger" id="modal-confirm">Confirm</button>
+    </div>
+  </div>
+</div>
+<div class="toast-wrap" id="toast-wrap"></div>
 
-                /* ---------- State ---------- */
-                const STORE_KEY = "dea_project_v1";
-                const SETTINGS_KEY = "dea_settings_v1";
+<script>
+(function(){
+"use strict";
 
-                let state = {
-                    columns: [],
-                    rows: [], // {__id, __status, __modified, __verified, data:{}}
-                    original: {}, // __id -> original data snapshot
-                    history: [],
-                    future: [],
-                    activity: [],
-                    filters: {
-                        status: 'all',
-                        query: ''
-                    },
-                    validationRules: {},
-                    validationErrors: [],
-                    duplicateGroups: [],
-                    verifyIds: [],
-                    verifyIndex: 0,
-                    page: 1,
-                    selected: new Set(),
-                    session: 'idle', // idle|running|paused|stopped
-                    editingId: null,
-                    fastEntryDraft: {},
-                };
+/* ---------- State ---------- */
+const STORE_KEY = "dea_project_v1";
+const SETTINGS_KEY = "dea_settings_v1";
 
-                let settings = {
-                    dateFormat: 'YYYY-MM-DD',
-                    capitalization: 'title',
-                    autosave: 20,
-                    strictness: 'normal',
-                    dupeSensitivity: 'exact',
-                    rowsPerPage: 50,
-                    darkMode: false,
-                    autoNext: false
-                };
+let state = {
+  columns: [],
+  rows: [],            // {__id, __status, __modified, __verified, data:{}}
+  original: {},         // __id -> original data snapshot
+  history: [],
+  future: [],
+  activity: [],
+  filters: {status:'all', query:''},
+  validationRules: {},
+  validationErrors: [],
+  duplicateGroups: [],
+  verifyIds: [],
+  verifyIndex: 0,
+  page: 1,
+  selected: new Set(),
+  session: 'idle', // idle|running|paused|stopped
+  editingId: null,
+  fastEntryDraft: {},
+};
 
-                let uidCounter = 1;
+let settings = {
+  dateFormat:'YYYY-MM-DD', capitalization:'title', autosave:20,
+  strictness:'normal', dupeSensitivity:'exact', rowsPerPage:50,
+  darkMode:false, autoNext:false
+};
 
-                function newId() {
-                    return 'r' + (uidCounter++) + '_' + Math.random().toString(36).slice(2, 7);
-                }
+let uidCounter = 1;
+function newId(){ return 'r'+(uidCounter++)+'_'+Math.random().toString(36).slice(2,7); }
 
-                /* ---------- Utilities ---------- */
-                function $(sel) {
-                    return document.querySelector(sel);
-                }
+/* ---------- Utilities ---------- */
+function $(sel){ return document.querySelector(sel); }
+function $all(sel){ return Array.from(document.querySelectorAll(sel)); }
+function esc(s){ return (s===undefined||s===null)? '' : String(s).replace(/[&<>"]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
 
-                function $all(sel) {
-                    return Array.from(document.querySelectorAll(sel));
-                }
+function toast(msg){
+  const el = document.createElement('div');
+  el.className='toast'; el.textContent=msg;
+  $('#toast-wrap').appendChild(el);
+  setTimeout(()=>el.remove(), 3200);
+}
 
-                function esc(s) {
-                    return (s === undefined || s === null) ? '' : String(s).replace(/[&<>"]/g, c => ({
-                        '&': '&amp;',
-                        '<': '&lt;',
-                        '>': '&gt;',
-                        '"': '&quot;'
-                    }[c]));
-                }
+function log(action){
+  state.activity.unshift({t:new Date().toISOString(), action});
+  if(state.activity.length>200) state.activity.length=200;
+  renderLog();
+  persist();
+}
 
-                function toast(msg) {
-                    const el = document.createElement('div');
-                    el.className = 'toast';
-                    el.textContent = msg;
-                    $('#toast-wrap').appendChild(el);
-                    setTimeout(() => el.remove(), 3200);
-                }
+function snapshot(){
+  // push a shallow-ish deep clone for undo (rows only)
+  state.history.push(JSON.stringify(state.rows));
+  if(state.history.length>25) state.history.shift();
+  state.future = [];
+}
+function undo(){
+  if(!state.history.length){ toast('Nothing to undo'); return; }
+  state.future.push(JSON.stringify(state.rows));
+  state.rows = JSON.parse(state.history.pop());
+  recomputeAll(); toast('Undone');
+}
+function redo(){
+  if(!state.future.length){ toast('Nothing to redo'); return; }
+  state.history.push(JSON.stringify(state.rows));
+  state.rows = JSON.parse(state.future.pop());
+  recomputeAll(); toast('Redone');
+}
 
-                function log(action) {
-                    state.activity.unshift({
-                        t: new Date().toISOString(),
-                        action
-                    });
-                    if (state.activity.length > 200) state.activity.length = 200;
-                    renderLog();
-                    persist();
-                }
+function persist(){
+  try{
+    localStorage.setItem(STORE_KEY, JSON.stringify({
+      columns: state.columns, rows: state.rows, original: state.original,
+      activity: state.activity, validationRules: state.validationRules
+    }));
+    localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings));
+  }catch(e){ /* storage full or unavailable - silently ignore, don't log data */ }
+}
+function loadPersisted(){
+  try{
+    const raw = localStorage.getItem(STORE_KEY);
+    if(raw){
+      const d = JSON.parse(raw);
+      state.columns = d.columns||[]; state.rows = d.rows||[]; state.original = d.original||{};
+      state.activity = d.activity||[]; state.validationRules = d.validationRules||{};
+    }
+    const sraw = localStorage.getItem(SETTINGS_KEY);
+    if(sraw) settings = Object.assign(settings, JSON.parse(sraw));
+  }catch(e){}
+}
 
-                function snapshot() {
-                    // push a shallow-ish deep clone for undo (rows only)
-                    state.history.push(JSON.stringify(state.rows));
-                    if (state.history.length > 25) state.history.shift();
-                    state.future = [];
-                }
+/* ---------- CSV parsing / stringify ---------- */
+function parseCSV(text){
+  const rows=[]; let row=[]; let field=''; let inQuotes=false;
+  for(let i=0;i<text.length;i++){
+    const c=text[i];
+    if(inQuotes){
+      if(c === '"'){
+        if(text[i+1]==='"'){ field+='"'; i++; } else { inQuotes=false; }
+      } else field+=c;
+    } else {
+      if(c === '"') inQuotes=true;
+      else if(c === ','){ row.push(field); field=''; }
+      else if(c === '\n'){ row.push(field); rows.push(row); row=[]; field=''; }
+      else if(c === '\r'){ /* skip */ }
+      else field+=c;
+    }
+  }
+  if(field.length || row.length){ row.push(field); rows.push(row); }
+  const filtered = rows.filter(r=>!(r.length===1 && r[0]===''));
+  return filtered;
+}
+function toCSV(columns, dataRows){
+  const esc1 = v=>{
+    v = v===undefined||v===null? '' : String(v);
+    if(/[",\n]/.test(v)) return '"'+v.replace(/"/g,'""')+'"';
+    return v;
+  };
+  const lines = [columns.map(esc1).join(',')];
+  dataRows.forEach(r=> lines.push(columns.map(c=>esc1(r[c])).join(',')));
+  return lines.join('\r\n');
+}
+function download(filename, content, type){
+  const blob = new Blob([content], {type: type||'text/plain'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob); a.download = filename;
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(()=>URL.revokeObjectURL(a.href), 2000);
+}
 
-                function undo() {
-                    if (!state.history.length) {
-                        toast('Nothing to undo');
-                        return;
-                    }
-                    state.future.push(JSON.stringify(state.rows));
-                    state.rows = JSON.parse(state.history.pop());
-                    recomputeAll();
-                    toast('Undone');
-                }
+/* ---------- Import handling ---------- */
+function loadDataset(columns, arrayOfObjects, sourceLabel){
+  snapshot();
+  state.columns = columns.slice();
+  state.rows = arrayOfObjects.map(obj=>{
+    const id = newId();
+    const data = {}; columns.forEach(c=> data[c] = obj[c]!==undefined? obj[c] : '');
+    state.original[id] = Object.assign({}, data);
+    return {__id:id, __status:'pending', __modified:false, __verified:false, data};
+  });
+  state.validationErrors = []; state.duplicateGroups = [];
+  state.page = 1;
+  log(`Imported dataset "${sourceLabel}" — ${state.rows.length} records, ${columns.length} columns`);
+  recomputeAll();
+  renderImportPreview(sourceLabel);
+  switchView('import');
+}
 
-                function redo() {
-                    if (!state.future.length) {
-                        toast('Nothing to redo');
-                        return;
-                    }
-                    state.history.push(JSON.stringify(state.rows));
-                    state.rows = JSON.parse(state.future.pop());
-                    recomputeAll();
-                    toast('Redone');
-                }
+function detectColumnsIssues(columns, rows){
+  const issues = [];
+  const seen = {};
+  columns.forEach(c=>{ seen[c]=(seen[c]||0)+1; });
+  const dupCols = Object.keys(seen).filter(c=>seen[c]>1);
+  if(dupCols.length) issues.push('Duplicate column names: '+dupCols.join(', '));
+  const emptyCols = columns.filter(c=> rows.every(r=> !r[c] || String(r[c]).trim()===''));
+  if(emptyCols.length) issues.push('Empty columns: '+emptyCols.join(', '));
+  let missing=0;
+  rows.forEach(r=> columns.forEach(c=>{ if(r[c]===undefined || String(r[c]).trim()==='') missing++; }));
+  if(missing) issues.push(missing+' missing values across the dataset');
+  return issues;
+}
 
-                function persist() {
-                    try {
-                        localStorage.setItem(STORE_KEY, JSON.stringify({
-                            columns: state.columns,
-                            rows: state.rows,
-                            original: state.original,
-                            activity: state.activity,
-                            validationRules: state.validationRules
-                        }));
-                        localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings));
-                    } catch (e) { /* storage full or unavailable - silently ignore, don't log data */ }
-                }
+function handleFile(file){
+  const name = file.name.toLowerCase();
+  if(name.endsWith('.xlsx')){
+    $('#xlsx-note').style.display='block';
+    $('#xlsx-note').textContent = 'XLSX files can\'t be parsed without a bundled spreadsheet library (which would break the "single offline file, no CDN" requirement). Please open the file in Excel/Sheets and re-save/export as CSV, then import that instead.';
+    return;
+  }
+  const reader = new FileReader();
+  reader.onload = ()=>{
+    const text = reader.result;
+    if(name.endsWith('.json')){
+      try{
+        const parsed = JSON.parse(text);
+        const arr = Array.isArray(parsed)? parsed : (parsed.rows||[]);
+        const cols = Array.from(arr.reduce((s,o)=>{ Object.keys(o||{}).forEach(k=>s.add(k)); return s; }, new Set()));
+        loadDataset(cols, arr, file.name);
+      }catch(e){ toast('Could not parse JSON: '+e.message); }
+    } else if(name.endsWith('.txt')){
+      importFromText(text, file.name);
+    } else {
+      importFromCSVText(text, file.name);
+    }
+  };
+  reader.readAsText(file);
+}
+function importFromCSVText(text, label){
+  const rows = parseCSV(text);
+  if(!rows.length){ toast('No rows found'); return; }
+  const cols = rows[0].map(c=>c.trim());
+  const dataRows = rows.slice(1).map(r=>{
+    const o={}; cols.forEach((c,i)=> o[c]=r[i]!==undefined? r[i] : ''); return o;
+  });
+  loadDataset(cols, dataRows, label||'pasted CSV');
+}
+function importFromText(text, label){
+  // Try CSV-ish first (has commas on every non-empty line and consistent count)
+  const lines = text.split(/\r?\n/).filter(l=>l.trim()!=='');
+  const looksCSV = lines.length>1 && lines.every(l=> (l.match(/,/g)||[]).length === (lines[0].match(/,/g)||[]).length && (l.match(/,/g)||[]).length>0);
+  if(looksCSV){ importFromCSVText(text, label); return; }
 
-                function loadPersisted() {
-                    try {
-                        const raw = localStorage.getItem(STORE_KEY);
-                        if (raw) {
-                            const d = JSON.parse(raw);
-                            state.columns = d.columns || [];
-                            state.rows = d.rows || [];
-                            state.original = d.original || {};
-                            state.activity = d.activity || [];
-                            state.validationRules = d.validationRules || {};
-                        }
-                        const sraw = localStorage.getItem(SETTINGS_KEY);
-                        if (sraw) settings = Object.assign(settings, JSON.parse(sraw));
-                    } catch (e) {}
-                }
+  // Key: Value block extraction, records separated by blank lines
+  const blocks = text.split(/\n\s*\n/).map(b=>b.trim()).filter(Boolean);
+  const records = [];
+  const colSet = new Set();
+  blocks.forEach(block=>{
+    const rec = {};
+    block.split(/\r?\n/).forEach(line=>{
+      const m = line.match(/^\s*([A-Za-z0-9 _\/-]{2,30}?)\s*[:\-]\s*(.+)$/);
+      if(m){ const key=m[1].trim(); rec[key]= m[2].trim(); colSet.add(key); }
+    });
+    if(Object.keys(rec).length) records.push(rec);
+  });
+  if(!records.length){ toast('Could not detect structured fields in this text.'); return; }
+  const cols = Array.from(colSet);
+  const normalized = records.map(r=>{
+    const o={}; cols.forEach(c=> o[c]= r[c]!==undefined? r[c] : 'REVIEW REQUIRED'); return o;
+  });
+  loadDataset(cols, normalized, label||'extracted text');
+}
 
-                /* ---------- CSV parsing / stringify ---------- */
-                function parseCSV(text) {
-                    const rows = [];
-                    let row = [];
-                    let field = '';
-                    let inQuotes = false;
-                    for (let i = 0; i < text.length; i++) {
-                        const c = text[i];
-                        if (inQuotes) {
-                            if (c === '"') {
-                                if (text[i + 1] === '"') {
-                                    field += '"';
-                                    i++;
-                                } else {
-                                    inQuotes = false;
-                                }
-                            } else field += c;
-                        } else {
-                            if (c === '"') inQuotes = true;
-                            else if (c === ',') {
-                                row.push(field);
-                                field = '';
-                            } else if (c === '\n') {
-                                row.push(field);
-                                rows.push(row);
-                                row = [];
-                                field = '';
-                            } else if (c === '\r') { /* skip */ } else field += c;
-                        }
-                    }
-                    if (field.length || row.length) {
-                        row.push(field);
-                        rows.push(row);
-                    }
-                    const filtered = rows.filter(r => !(r.length === 1 && r[0] === ''));
-                    return filtered;
-                }
-
-                function toCSV(columns, dataRows) {
-                    const esc1 = v => {
-                        v = v === undefined || v === null ? '' : String(v);
-                        if (/[",\n]/.test(v)) return '"' + v.replace(/"/g, '""') + '"';
-                        return v;
-                    };
-                    const lines = [columns.map(esc1).join(',')];
-                    dataRows.forEach(r => lines.push(columns.map(c => esc1(r[c])).join(',')));
-                    return lines.join('\r\n');
-                }
-
-                function download(filename, content, type) {
-                    const blob = new Blob([content], {
-                        type: type || 'text/plain'
-                    });
-                    const a = document.createElement('a');
-                    a.href = URL.createObjectURL(blob);
-                    a.download = filename;
-                    document.body.appendChild(a);
-                    a.click();
-                    a.remove();
-                    setTimeout(() => URL.revokeObjectURL(a.href), 2000);
-                }
-
-                /* ---------- Import handling ---------- */
-                function loadDataset(columns, arrayOfObjects, sourceLabel) {
-                    snapshot();
-                    state.columns = columns.slice();
-                    state.rows = arrayOfObjects.map(obj => {
-                        const id = newId();
-                        const data = {};
-                        columns.forEach(c => data[c] = obj[c] !== undefined ? obj[c] : '');
-                        state.original[id] = Object.assign({}, data);
-                        return {
-                            __id: id,
-                            __status: 'pending',
-                            __modified: false,
-                            __verified: false,
-                            data
-                        };
-                    });
-                    state.validationErrors = [];
-                    state.duplicateGroups = [];
-                    state.page = 1;
-                    log(`Imported dataset "${sourceLabel}" — ${state.rows.length} records, ${columns.length} columns`);
-                    recomputeAll();
-                    renderImportPreview(sourceLabel);
-                    switchView('import');
-                }
-
-                function detectColumnsIssues(columns, rows) {
-                    const issues = [];
-                    const seen = {};
-                    columns.forEach(c => {
-                        seen[c] = (seen[c] || 0) + 1;
-                    });
-                    const dupCols = Object.keys(seen).filter(c => seen[c] > 1);
-                    if (dupCols.length) issues.push('Duplicate column names: ' + dupCols.join(', '));
-                    const emptyCols = columns.filter(c => rows.every(r => !r[c] || String(r[c]).trim() === ''));
-                    if (emptyCols.length) issues.push('Empty columns: ' + emptyCols.join(', '));
-                    let missing = 0;
-                    rows.forEach(r => columns.forEach(c => {
-                        if (r[c] === undefined || String(r[c]).trim() === '') missing++;
-                    }));
-                    if (missing) issues.push(missing + ' missing values across the dataset');
-                    return issues;
-                }
-
-                function handleFile(file) {
-                    const name = file.name.toLowerCase();
-                    if (name.endsWith('.xlsx')) {
-                        $('#xlsx-note').style.display = 'block';
-                        $('#xlsx-note').textContent = 'XLSX files can\'t be parsed without a bundled spreadsheet library (which would break the "single offline file, no CDN" requirement). Please open the file in Excel/Sheets and re-save/export as CSV, then import that instead.';
-                        return;
-                    }
-                    const reader = new FileReader();
-                    reader.onload = () => {
-                        const text = reader.result;
-                        if (name.endsWith('.json')) {
-                            try {
-                                const parsed = JSON.parse(text);
-                                const arr = Array.isArray(parsed) ? parsed : (parsed.rows || []);
-                                const cols = Array.from(arr.reduce((s, o) => {
-                                    Object.keys(o || {}).forEach(k => s.add(k));
-                                    return s;
-                                }, new Set()));
-                                loadDataset(cols, arr, file.name);
-                            } catch (e) {
-                                toast('Could not parse JSON: ' + e.message);
-                            }
-                        } else if (name.endsWith('.txt')) {
-                            importFromText(text, file.name);
-                        } else {
-                            importFromCSVText(text, file.name);
-                        }
-                    };
-                    reader.readAsText(file);
-                }
-
-                function importFromCSVText(text, label) {
-                    const rows = parseCSV(text);
-                    if (!rows.length) {
-                        toast('No rows found');
-                        return;
-                    }
-                    const cols = rows[0].map(c => c.trim());
-                    const dataRows = rows.slice(1).map(r => {
-                        const o = {};
-                        cols.forEach((c, i) => o[c] = r[i] !== undefined ? r[i] : '');
-                        return o;
-                    });
-                    loadDataset(cols, dataRows, label || 'pasted CSV');
-                }
-
-                function importFromText(text, label) {
-                    // Try CSV-ish first (has commas on every non-empty line and consistent count)
-                    const lines = text.split(/\r?\n/).filter(l => l.trim() !== '');
-                    const looksCSV = lines.length > 1 && lines.every(l => (l.match(/,/g) || []).length === (lines[0].match(/,/g) || []).length && (l.match(/,/g) || []).length > 0);
-                    if (looksCSV) {
-                        importFromCSVText(text, label);
-                        return;
-                    }
-
-                    // Key: Value block extraction, records separated by blank lines
-                    const blocks = text.split(/\n\s*\n/).map(b => b.trim()).filter(Boolean);
-                    const records = [];
-                    const colSet = new Set();
-                    blocks.forEach(block => {
-                        const rec = {};
-                        block.split(/\r?\n/).forEach(line => {
-                            const m = line.match(/^\s*([A-Za-z0-9 _\/-]{2,30}?)\s*[:\-]\s*(.+)$/);
-                            if (m) {
-                                const key = m[1].trim();
-                                rec[key] = m[2].trim();
-                                colSet.add(key);
-                            }
-                        });
-                        if (Object.keys(rec).length) records.push(rec);
-                    });
-                    if (!records.length) {
-                        toast('Could not detect structured fields in this text.');
-                        return;
-                    }
-                    const cols = Array.from(colSet);
-                    const normalized = records.map(r => {
-                        const o = {};
-                        cols.forEach(c => o[c] = r[c] !== undefined ? r[c] : 'REVIEW REQUIRED');
-                        return o;
-                    });
-                    loadDataset(cols, normalized, label || 'extracted text');
-                }
-
-                function renderImportPreview(label) {
-                    const wrap = $('#import-preview-wrap');
-                    wrap.style.display = 'block';
-                    const issues = detectColumnsIssues(state.columns, state.rows.map(r => r.data));
-                    const dupRows = findExactDuplicateRowCount();
-                    $('#import-summary').innerHTML = `
+function renderImportPreview(label){
+  const wrap = $('#import-preview-wrap'); wrap.style.display='block';
+  const issues = detectColumnsIssues(state.columns, state.rows.map(r=>r.data));
+  const dupRows = findExactDuplicateRowCount();
+  $('#import-summary').innerHTML = `
     <div><strong>${state.rows.length}</strong> rows imported from <em>${esc(label)}</em> with <strong>${state.columns.length}</strong> columns.</div>
     ${issues.length? '<div class="warn-box" style="margin-top:8px;">'+issues.map(esc).join('<br>')+'</div>' : '<div class="ok-box" style="margin-top:8px;">No obvious structural issues detected.</div>'}
     ${dupRows? '<div class="warn-box" style="margin-top:8px;">'+dupRows+' exact duplicate row(s) detected — check the Duplicates tab.</div>' : ''}
     <div class="small" style="margin-top:8px;">Original imported data is preserved and can be restored via "Undo Changes" in the Clean tab.</div>
   `;
-                    const preview = state.rows.slice(0, 50);
-                    $('#import-preview-table').innerHTML = renderPlainTable(state.columns, preview.map(r => r.data));
-                }
+  const preview = state.rows.slice(0,50);
+  $('#import-preview-table').innerHTML = renderPlainTable(state.columns, preview.map(r=>r.data));
+}
+function findExactDuplicateRowCount(){
+  const seen = new Set(); let dup=0;
+  state.rows.forEach(r=>{
+    const key = state.columns.map(c=>String(r.data[c]||'').trim().toLowerCase()).join('|');
+    if(seen.has(key)) dup++; else seen.add(key);
+  });
+  return dup;
+}
+function renderPlainTable(columns, rows){
+  let h='<table><thead><tr><th>#</th>'+columns.map(c=>'<th>'+esc(c)+'</th>').join('')+'</tr></thead><tbody>';
+  rows.forEach((r,i)=>{ h+='<tr><td>'+(i+1)+'</td>'+columns.map(c=>'<td>'+esc(r[c])+'</td>').join('')+'</tr>'; });
+  h+='</tbody></table>';
+  return h;
+}
 
-                function findExactDuplicateRowCount() {
-                    const seen = new Set();
-                    let dup = 0;
-                    state.rows.forEach(r => {
-                        const key = state.columns.map(c => String(r.data[c] || '').trim().toLowerCase()).join('|');
-                        if (seen.has(key)) dup++;
-                        else seen.add(key);
-                    });
-                    return dup;
-                }
+/* ---------- Cleaning ---------- */
+function titleCase(s){ return s.replace(/\w\S*/g, t=> t.charAt(0).toUpperCase()+t.substr(1).toLowerCase()); }
+function looksLikeName(col){ return /name/i.test(col); }
+function looksLikePhone(col){ return /phone|mobile|contact/i.test(col); }
+function looksLikeEmail(col){ return /email|e-mail/i.test(col); }
+function looksLikeDate(col){ return /date|dob|created|updated/i.test(col); }
+function isValidEmail(v){ return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v); }
+function isValidPhone(v){ const digits=String(v).replace(/\D/g,''); return digits.length>=7 && digits.length<=15; }
+function standardizeDate(v){
+  if(!v) return v;
+  const s = String(v).trim();
+  let m;
+  if(m = s.match(/^(\d{4})-(\d{1,2})-(\d{1,2})$/)) return `${m[1]}-${pad(m[2])}-${pad(m[3])}`;
+  if(m = s.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})$/)) return `${m[3]}-${pad(m[2])}-${pad(m[1])}`;
+  const d = new Date(s);
+  if(!isNaN(d.getTime())) return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+  return v; // leave ambiguous values untouched
+}
+function pad(n){ n=String(n); return n.length<2? '0'+n : n; }
 
-                function renderPlainTable(columns, rows) {
-                    let h = '<table><thead><tr><th>#</th>' + columns.map(c => '<th>' + esc(c) + '</th>').join('') + '</tr></thead><tbody>';
-                    rows.forEach((r, i) => {
-                        h += '<tr><td>' + (i + 1) + '</td>' + columns.map(c => '<td>' + esc(r[c]) + '</td>').join('') + '</tr>';
-                    });
-                    h += '</tbody></table>';
-                    return h;
-                }
-
-                /* ---------- Cleaning ---------- */
-                function titleCase(s) {
-                    return s.replace(/\w\S*/g, t => t.charAt(0).toUpperCase() + t.substr(1).toLowerCase());
-                }
-
-                function looksLikeName(col) {
-                    return /name/i.test(col);
-                }
-
-                function looksLikePhone(col) {
-                    return /phone|mobile|contact/i.test(col);
-                }
-
-                function looksLikeEmail(col) {
-                    return /email|e-mail/i.test(col);
-                }
-
-                function looksLikeDate(col) {
-                    return /date|dob|created|updated/i.test(col);
-                }
-
-                function isValidEmail(v) {
-                    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
-                }
-
-                function isValidPhone(v) {
-                    const digits = String(v).replace(/\D/g, '');
-                    return digits.length >= 7 && digits.length <= 15;
-                }
-
-                function standardizeDate(v) {
-                    if (!v) return v;
-                    const s = String(v).trim();
-                    let m;
-                    if (m = s.match(/^(\d{4})-(\d{1,2})-(\d{1,2})$/)) return `${m[1]}-${pad(m[2])}-${pad(m[3])}`;
-                    if (m = s.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})$/)) return `${m[3]}-${pad(m[2])}-${pad(m[1])}`;
-                    const d = new Date(s);
-                    if (!isNaN(d.getTime())) return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
-                    return v; // leave ambiguous values untouched
-                }
-
-                function pad(n) {
-                    n = String(n);
-                    return n.length < 2 ? '0' + n : n;
-                }
-
-                function runCleaning(ops) {
-                    snapshot();
-                    const report = {
-                        trimmed: 0,
-                        cased: 0,
-                        invalidPhones: 0,
-                        invalidEmails: 0,
-                        datesFixed: 0,
-                        numbersFixed: 0,
-                        suspicious: 0,
-                        emptyCells: 0
-                    };
-                    state.rows.forEach(row => {
-                        let changed = false;
-                        state.columns.forEach(col => {
-                            let v = row.data[col];
-                            if (v === undefined || v === null) v = '';
-                            let original = v;
-                            if (ops.includes('trim')) {
-                                const t = String(v).replace(/\s+/g, ' ').trim();
-                                if (t !== v) {
-                                    v = t;
-                                    report.trimmed++;
-                                }
-                            }
-                            if (ops.includes('case') && looksLikeName(col) && v) {
-                                const t = titleCase(String(v));
-                                if (t !== v) {
-                                    v = t;
-                                    report.cased++;
-                                }
-                            }
-                            if (ops.includes('date') && looksLikeDate(col) && v) {
-                                const t = standardizeDate(v);
-                                if (t !== v) {
-                                    v = t;
-                                    report.datesFixed++;
-                                }
-                            }
-                            if (ops.includes('number') && !looksLikePhone(col) && /^[\d.,\- ]+$/.test(String(v)) && v) {
-                                const t = String(v).replace(/[^\d.\-]/g, '');
-                                if (t && t !== v) {
-                                    v = t;
-                                    report.numbersFixed++;
-                                }
-                            }
-                            if (ops.includes('phone') && looksLikePhone(col) && v && !isValidPhone(v)) report.invalidPhones++;
-                            if (ops.includes('email') && looksLikeEmail(col) && v && !isValidEmail(v)) report.invalidEmails++;
-                            if (ops.includes('chars') && /[^\x20-\x7E]/.test(String(v))) report.suspicious++;
-                            if (ops.includes('empty') && String(v).trim() === '') report.emptyCells++;
-                            if (v !== original) {
-                                row.data[col] = v;
-                                changed = true;
-                            }
-                        });
-                        if (changed) {
-                            row.__modified = true;
-                            if (row.__status === 'pending') row.__status = 'pending';
-                        }
-                    });
-                    log('Cleaning run: ' + JSON.stringify(report));
-                    recomputeAll();
-                    renderCleanReport(report);
-                }
-
-                function renderCleanReport(r) {
-                    $('#clean-report').innerHTML = `
+function runCleaning(ops){
+  snapshot();
+  const report = {trimmed:0, cased:0, invalidPhones:0, invalidEmails:0, datesFixed:0, numbersFixed:0, suspicious:0, emptyCells:0};
+  state.rows.forEach(row=>{
+    let changed=false;
+    state.columns.forEach(col=>{
+      let v = row.data[col];
+      if(v===undefined||v===null) v='';
+      let original = v;
+      if(ops.includes('trim')){
+        const t = String(v).replace(/\s+/g,' ').trim();
+        if(t!==v){ v=t; report.trimmed++; }
+      }
+      if(ops.includes('case') && looksLikeName(col) && v){
+        const t = titleCase(String(v));
+        if(t!==v){ v=t; report.cased++; }
+      }
+      if(ops.includes('date') && looksLikeDate(col) && v){
+        const t = standardizeDate(v);
+        if(t!==v){ v=t; report.datesFixed++; }
+      }
+      if(ops.includes('number') && !looksLikePhone(col) && /^[\d.,\- ]+$/.test(String(v)) && v){
+        const t = String(v).replace(/[^\d.\-]/g,'');
+        if(t && t!==v){ v=t; report.numbersFixed++; }
+      }
+      if(ops.includes('phone') && looksLikePhone(col) && v && !isValidPhone(v)) report.invalidPhones++;
+      if(ops.includes('email') && looksLikeEmail(col) && v && !isValidEmail(v)) report.invalidEmails++;
+      if(ops.includes('chars') && /[^\x20-\x7E]/.test(String(v))) report.suspicious++;
+      if(ops.includes('empty') && String(v).trim()==='') report.emptyCells++;
+      if(v!==original){ row.data[col]=v; changed=true; }
+    });
+    if(changed){ row.__modified = true; if(row.__status==='pending') row.__status='pending'; }
+  });
+  log('Cleaning run: '+JSON.stringify(report));
+  recomputeAll();
+  renderCleanReport(report);
+}
+function renderCleanReport(r){
+  $('#clean-report').innerHTML = `
     <div class="grid grid-4">
       <div class="pill">Trimmed: ${r.trimmed}</div>
       <div class="pill">Recapitalized: ${r.cased}</div>
@@ -1563,48 +776,27 @@
       <div class="pill">Suspicious characters: ${r.suspicious}</div>
       <div class="pill">Empty cells: ${r.emptyCells}</div>
     </div>`;
-                }
+}
+function undoToOriginal(){
+  confirmModal('Revert to original import?', 'This restores every record to its originally imported values and discards cleaning/edits. This does not affect verification status history.', ()=>{
+    snapshot();
+    state.rows.forEach(row=>{ row.data = Object.assign({}, state.original[row.__id]); row.__modified=false; });
+    log('Reverted all data to original imported values');
+    recomputeAll();
+    renderCleanReport({trimmed:0,cased:0,invalidPhones:0,invalidEmails:0,datesFixed:0,numbersFixed:0,suspicious:0,emptyCells:0});
+    toast('Reverted to original data');
+  });
+}
 
-                function undoToOriginal() {
-                    confirmModal('Revert to original import?', 'This restores every record to its originally imported values and discards cleaning/edits. This does not affect verification status history.', () => {
-                        snapshot();
-                        state.rows.forEach(row => {
-                            row.data = Object.assign({}, state.original[row.__id]);
-                            row.__modified = false;
-                        });
-                        log('Reverted all data to original imported values');
-                        recomputeAll();
-                        renderCleanReport({
-                            trimmed: 0,
-                            cased: 0,
-                            invalidPhones: 0,
-                            invalidEmails: 0,
-                            datesFixed: 0,
-                            numbersFixed: 0,
-                            suspicious: 0,
-                            emptyCells: 0
-                        });
-                        toast('Reverted to original data');
-                    });
-                }
-
-                /* ---------- Validation ---------- */
-                function renderValidationRulesUI() {
-                    const wrap = $('#validation-rules-wrap');
-                    wrap.innerHTML = '';
-                    state.columns.forEach(col => {
-                                const rule = state.validationRules[col] || {
-                                    required: false,
-                                    unique: false,
-                                    type: 'text',
-                                    pattern: ''
-                                };
-                                state.validationRules[col] = rule;
-                                const div = document.createElement('div');
-                                div.className = 'row-flex';
-                                div.style.padding = '6px 0';
-                                div.style.borderBottom = '1px solid var(--line)';
-                                div.innerHTML = `
+/* ---------- Validation ---------- */
+function renderValidationRulesUI(){
+  const wrap = $('#validation-rules-wrap'); wrap.innerHTML='';
+  state.columns.forEach(col=>{
+    const rule = state.validationRules[col] || {required:false, unique:false, type:'text', pattern:''};
+    state.validationRules[col]=rule;
+    const div = document.createElement('div');
+    div.className='row-flex'; div.style.padding='6px 0'; div.style.borderBottom='1px solid var(--line)';
+    div.innerHTML = `
       <span class="col-tag" style="min-width:120px;">${esc(col)}</span>
       <label class="check-row"><input type="checkbox" data-col="${esc(col)}" data-k="required" ${rule.required?'checked':''}> Required</label>
       <label class="check-row"><input type="checkbox" data-col="${esc(col)}" data-k="unique" ${rule.unique?'checked':''}> Unique</label>
@@ -2309,516 +1501,6 @@ function init(){
 init();
 
 })();
-    </script>
+</script>
 </body>
-
-</html> if (v === undefined || v === null) v = ''; let original = v; if (ops.includes('trim')) { const t = String(v).replace(/\s+/g, ' ').trim(); if (t !== v) { v = t; report.trimmed++; } } if (ops.includes('case') && looksLikeName(col) && v) { const t = titleCase(String(v));
-if (t !== v) { v = t; report.cased++; } } if (ops.includes('date') && looksLikeDate(col) && v) { const t = standardizeDate(v); if (t !== v) { v = t; report.datesFixed++; } } if (ops.includes('number') && !looksLikePhone(col) && /^[\d.,\- ]+$/.test(String(v))
-&& v) { const t = String(v).replace(/[^\d.\-]/g, ''); if (t && t !== v) { v = t; report.numbersFixed++; } } if (ops.includes('phone') && looksLikePhone(col) && v && !isValidPhone(v)) report.invalidPhones++; if (ops.includes('email') && looksLikeEmail(col)
-&& v && !isValidEmail(v)) report.invalidEmails++; if (ops.includes('chars') && /[^\x20-\x7E]/.test(String(v))) report.suspicious++; if (ops.includes('empty') && String(v).trim() === '') report.emptyCells++; if (v !== original) { row.data[col] = v; changed
-= true; } }); if (changed) { row.__modified = true; if (row.__status === 'pending') row.__status = 'pending'; } }); log('Cleaning run: ' + JSON.stringify(report)); recomputeAll(); renderCleanReport(report); } function renderCleanReport(r) { $('#clean-report').innerHTML
-= `
-<div class="grid grid-4">
-    <div class="pill">Trimmed: ${r.trimmed}</div>
-    <div class="pill">Recapitalized: ${r.cased}</div>
-    <div class="pill">Invalid phones flagged: ${r.invalidPhones}</div>
-    <div class="pill">Invalid emails flagged: ${r.invalidEmails}</div>
-    <div class="pill">Dates standardized: ${r.datesFixed}</div>
-    <div class="pill">Numbers standardized: ${r.numbersFixed}</div>
-    <div class="pill">Suspicious characters: ${r.suspicious}</div>
-    <div class="pill">Empty cells: ${r.emptyCells}</div>
-</div>`; } function undoToOriginal() { confirmModal('Revert to original import?', 'This restores every record to its originally imported values and discards cleaning/edits. This does not affect verification status history.', () => { snapshot(); state.rows.forEach(row
-=> { row.data = Object.assign({}, state.original[row.__id]); row.__modified = false; }); log('Reverted all data to original imported values'); recomputeAll(); renderCleanReport({ trimmed: 0, cased: 0, invalidPhones: 0, invalidEmails: 0, datesFixed: 0,
-numbersFixed: 0, suspicious: 0, emptyCells: 0 }); toast('Reverted to original data'); }); } /* ---------- Validation ---------- */ function renderValidationRulesUI() { const wrap = $('#validation-rules-wrap'); wrap.innerHTML = ''; state.columns.forEach(col
-=> { const rule = state.validationRules[col] || { required: false, unique: false, type: 'text', pattern: '' }; state.validationRules[col] = rule; const div = document.createElement('div'); div.className = 'row-flex'; div.style.padding = '6px 0'; div.style.borderBottom
-= '1px solid var(--line)'; div.innerHTML = `
-<span class="col-tag" style="min-width:120px;">${esc(col)}</span>
-<label class="check-row"><input type="checkbox" data-col="${esc(col)}" data-k="required" ${rule.required?'checked':''}> Required</label>
-<label class="check-row"><input type="checkbox" data-col="${esc(col)}" data-k="unique" ${rule.unique?'checked':''}> Unique</label>
-<select data-col="${esc(col)}" data-k="type">
-        ${['text','email','phone','date','number'].map(t=>`<option value="${t}" ${rule.type===t?'selected':''}>${t}</option>`).join('')}
-      </select>
-<input type="text" data-col="${esc(col)}" data-k="pattern" placeholder="custom regex (optional)" value="${esc(rule.pattern)}" style="width:160px;"> `; wrap.appendChild(div); }); wrap.querySelectorAll('input,select').forEach(el=>{ el.addEventListener('change',
-()=>{ const col=el.dataset.col, k=el.dataset.k; const rule = state.validationRules[col]; rule[k] = el.type==='checkbox'? el.checked : el.value; }); }); } function runValidation(){ const errors = []; const uniqueTrack = {}; state.columns.forEach(c=> uniqueTrack[c]={});
-state.rows.forEach(row=>{ state.columns.forEach(col=>{ const rule = state.validationRules[col]; if(!rule) return; const v = row.data[col]!==undefined? String(row.data[col]).trim() : ''; if(rule.required && v===''){ errors.push({id:row.__id,col,type:'missing',severity:'yellow',msg:'Missing
-value'}); return; } if(v===''){ return; } if(rule.type==='email' && !isValidEmail(v)) errors.push({id:row.__id,col,type:'invalid',severity:'red',msg:'Invalid email format'}); if(rule.type==='phone' && !isValidPhone(v)) errors.push({id:row.__id,col,type:'invalid',severity:'red',msg:'Invalid
-phone number'}); if(rule.type==='date' && isNaN(new Date(standardizeDate(v)).getTime())) errors.push({id:row.__id,col,type:'invalid',severity:'red',msg:'Invalid date'}); if(rule.type==='number' && isNaN(Number(v))) errors.push({id:row.__id,col,type:'invalid',severity:'red',msg:'Not
-a number'}); if(rule.pattern){ try{ if(!new RegExp(rule.pattern).test(v)) errors.push({id:row.__id,col,type:'invalid',severity:'red',msg:'Does not match custom pattern'}); }catch(e){} } if(rule.unique){ const key = v.toLowerCase(); uniqueTrack[col][key]
-= (uniqueTrack[col][key]||0)+1; } }); }); Object.keys(uniqueTrack).forEach(col=>{ if(!state.validationRules[col] || !state.validationRules[col].unique) return; state.rows.forEach(row=>{ const v = String(row.data[col]||'').trim().toLowerCase(); if(v &&
-uniqueTrack[col][v]>1) errors.push({id:row.__id,col,type:'duplicate',severity:'orange',msg:'Possible duplicate value (must be unique)'}); }); }); state.validationErrors = errors; state.rows.forEach(row=>{ row.__status = errors.some(e=>e.id===row.__id)
-? 'error' : (row.__status==='error'? 'pending': row.__status); }); log('Validation run: '+errors.length+' issue(s) found'); recomputeAll(); renderValidationResults(); renderErrorCenter(); } function renderValidationResults(){ const counts = {red:0, yellow:0,
-orange:0}; state.validationErrors.forEach(e=> counts[e.severity]++); $('#validation-summary').innerHTML = `
-<div class="row-flex">
-    <span class="pill">🔴 Invalid: ${counts.red}</span>
-    <span class="pill">🟡 Missing: ${counts.yellow}</span>
-    <span class="pill">🟠 Possible duplicate: ${counts.orange}</span>
-    <span class="pill">🟢 Valid records: ${Math.max(0,state.rows.length - new Set(state.validationErrors.map(e=>e.id)).size)}</span>
-</div>`; let h = '
-<table>
-    <thead>
-        <tr>
-            <th>Row</th>
-            <th>Column</th>
-            <th>Issue</th>
-            <th>Value</th>
-        </tr>
-    </thead>
-    <tbody>'; state.validationErrors.slice(0,500).forEach(e=>{ const row = state.rows.find(r=>r.__id===e.id); const icon = e.severity==='red'?'🔴':e.severity==='yellow'?'🟡':'🟠'; h += `
-        <tr>
-            <td>${rowIndex(e.id)+1}</td>
-            <td>${esc(e.col)}</td>
-            <td>${icon} ${esc(e.msg)}</td>
-            <td>${esc(row?row.data[e.col]:'')}</td>
-        </tr>`; }); h+='
-    </tbody>
-</table>'; $('#validation-table').innerHTML = h; } function rowIndex(id){ return state.rows.findIndex(r=>r.__id===id); } /* ---------- Duplicates ---------- */ function renderDupeColumnsUI(){ const wrap = $('#dupe-columns-wrap'); const mode = $('#dupe-mode').value;
-if(mode!=='column'){ wrap.innerHTML=''; return; } wrap.innerHTML = state.columns.map(c=>`<label class="check-row"><input type="checkbox" class="dupe-col" value="${esc(c)}"> ${esc(c)}</label>`).join(' '); } function runDuplicateDetection(){ const mode
-= $('#dupe-mode').value; let cols = state.columns; if(mode==='column'){ cols = $all('.dupe-col:checked').map(el=>el.value); if(!cols.length){ toast('Select at least one column'); return; } } const loose = settings.dupeSensitivity==='loose'; const groups
-= {}; state.rows.forEach(row=>{ const key = cols.map(c=>{ let v = String(row.data[c]||''); if(loose) v = v.trim().toLowerCase().replace(/\s+/g,' '); return v; }).join('␟'); if(!key.replace(/␟/g,'').trim()) return; (groups[key] = groups[key]||[]).push(row.__id);
-}); const dupeGroups = Object.values(groups).filter(g=>g.length>1); state.duplicateGroups = dupeGroups; state.rows.forEach(row=> { if(row.__status!=='error') row.__status = dupeGroups.some(g=>g.includes(row.__id)) ? 'duplicate' : (row.__status==='duplicate'?'pending':row.__status);
-}); log('Duplicate detection run ('+mode+'): '+dupeGroups.length+' group(s) found'); recomputeAll(); renderDupeGroups(); } function renderDupeGroups(){ const wrap = $('#dupe-groups'); if(!state.duplicateGroups.length){ wrap.innerHTML='<span class="small">No duplicate groups found.</span>';
-return; } wrap.innerHTML = state.duplicateGroups.map((g,gi)=>{ const rowsHtml = g.map(id=>{ const r = state.rows.find(x=>x.__id===id); if(!r) return ''; return `
-<tr>
-    <td><input type="checkbox" class="dupe-keep" data-group="${gi}" data-id="${id}"></td>
-    <td>${rowIndex(id)+1}</td>${state.columns.slice(0,5).map(c=>'
-    <td>'+esc(r.data[c])+'</td>').join('')}</tr>`; }).join(''); return `
-<div class="card" style="margin-bottom:12px;">
-    <div class="flex-between"><strong>Duplicate Group #${gi+1}</strong>
-        <div class="btn-row">
-            <button class="btn" data-dupe-action="first" data-group="${gi}">Keep first</button>
-            <button class="btn" data-dupe-action="latest" data-group="${gi}">Keep latest</button>
-            <button class="btn" data-dupe-action="selected" data-group="${gi}">Keep selected</button>
-            <button class="btn ghost" data-dupe-action="ignore" data-group="${gi}">Ignore</button>
-        </div>
-    </div>
-    <div class="table-scroll" style="margin-top:8px; max-height:220px;">
-        <table>
-            <thead>
-                <tr>
-                    <th>Keep?</th>
-                    <th>#</th>${state.columns.slice(0,5).map(c=>'
-                    <th>'+esc(c)+'</th>').join('')}</tr>
-            </thead>
-            <tbody>${rowsHtml}</tbody>
-        </table>
-    </div>
-</div>`; }).join(''); wrap.querySelectorAll('[data-dupe-action]').forEach(btn=>{ btn.addEventListener('click', ()=>{ const gi = Number(btn.dataset.group); const action = btn.dataset.dupeAction; const group = state.duplicateGroups[gi]; if(action==='ignore'){
-toast('Group ignored'); return; } let keepIds = []; if(action==='first') keepIds=[group[0]]; else if(action==='latest') keepIds=[group[group.length-1]]; else if(action==='selected') keepIds = wrap.querySelectorAll(`.dupe-keep[data-group="${gi}"]:checked`).length
-? Array.from(wrap.querySelectorAll(`.dupe-keep[data-group="${gi}"]:checked`)).map(c=>c.dataset.id) : null; if(!keepIds){ toast('Select at least one record to keep'); return; } const toRemove = group.filter(id=>!keepIds.includes(id)); confirmModal('Remove
-duplicate records?', `This will permanently remove ${toRemove.length} record(s) from Group #${gi+1}. This cannot be undone except via Undo (Ctrl+Z) immediately after.`, ()=>{ snapshot(); state.rows = state.rows.filter(r=>!toRemove.includes(r.__id)); state.duplicateGroups[gi]
-= keepIds; log(`Removed ${toRemove.length} duplicate record(s) from group #${gi+1} ("${action}")`); recomputeAll(); renderDupeGroups(); toast('Duplicates removed'); }); }); }); } /* ---------- Verify workspace ---------- */ function refreshVerifyQueue(){
-state.verifyIds = state.rows.filter(r=> r.__status!=='verified').map(r=>r.__id); if(!state.verifyIds.length) state.verifyIds = state.rows.map(r=>r.__id); if(state.verifyIndex>=state.verifyIds.length) state.verifyIndex=0; } function renderVerify(){ refreshVerifyQueue();
-const total = state.verifyIds.length; $('#verify-position').textContent = `Record ${total? state.verifyIndex+1:0} / ${total}`; if(!total){ $('#verify-source').innerHTML='
-<div class="small">No records to verify.</div>'; $('#verify-entered').innerHTML=''; return; } const id = state.verifyIds[state.verifyIndex]; const row = state.rows.find(r=>r.__id===id); const orig = state.original[id]||{}; let srcHtml='', entHtml=''; state.columns.forEach(c=>{
-const o = orig[c]!==undefined? String(orig[c]): ''; const n = row.data[c]!==undefined? String(row.data[c]): ''; const diff = o!==n; srcHtml += `
-<div class="verify-field"><span>${esc(c)}</span><span>${diff? '<span class="diff-old">'+esc(o)+'</span>' : esc(o)}</span>
-</div>`; entHtml += `
-<div class="verify-field"><span>${esc(c)}</span><span>${diff? '<span class="diff-new">'+esc(n)+'</span>' : esc(n)}</span>
-</div>`; }); $('#verify-source').innerHTML = srcHtml; $('#verify-entered').innerHTML = entHtml; } function verifyNav(delta){ if(!state.verifyIds.length) return; state.verifyIndex = (state.verifyIndex + delta + state.verifyIds.length) % state.verifyIds.length;
-renderVerify(); } function verifyAccept(){ if(!state.verifyIds.length) return; const id = state.verifyIds[state.verifyIndex]; const row = state.rows.find(r=>r.__id===id); row.__status='verified'; row.__verified=true; log('Verified record #'+(rowIndex(id)+1));
-recomputeAll(); if(settings.autoNext) verifyNav(1); else renderVerify(); } function verifyReject(){ if(!state.verifyIds.length) return; const id = state.verifyIds[state.verifyIndex]; const row = state.rows.find(r=>r.__id===id); snapshot(); row.data =
-Object.assign({}, state.original[id]); row.__modified=false; row.__status='pending'; log('Rejected changes, reverted record #'+(rowIndex(id)+1)); recomputeAll(); renderVerify(); } function verifyMark(){ if(!state.verifyIds.length) return; const id = state.verifyIds[state.verifyIndex];
-const row = state.rows.find(r=>r.__id===id); row.__status='verified'; row.__verified=true; recomputeAll(); renderVerify(); } function verifyEditPrompt(){ if(!state.verifyIds.length) return; const id = state.verifyIds[state.verifyIndex]; const row = state.rows.find(r=>r.__id===id);
-const col = prompt('Edit which column?\n'+state.columns.join(', ')); if(!col || !state.columns.includes(col)) return; const val = prompt('New value for "'+col+'"', row.data[col]||''); if(val===null) return; snapshot(); row.data[col]=val; row.__modified=true;
-log('Edited "'+col+'" on record #'+(rowIndex(id)+1)); recomputeAll(); renderVerify(); } function verifyJumpToIssue(delta){ const ids = Array.from(new Set(state.validationErrors.map(e=>e.id).concat(state.duplicateGroups.flat()))); if(!ids.length){ toast('No
-flagged issues'); return; } let idx = ids.indexOf(state.verifyIds[state.verifyIndex]); idx = (idx + delta + ids.length) % ids.length; const targetId = ids[idx]; const vi = state.verifyIds.indexOf(targetId); state.verifyIndex = vi>=0? vi : 0; renderVerify();
-} /* ---------- Fast Entry ---------- */ function renderFastEntryForm(){ const wrap = $('#fastentry-form'); wrap.innerHTML=''; state.columns.forEach((c,i)=>{ const required = state.validationRules[c] && state.validationRules[c].required; const div = document.createElement('label');
-div.className='field'; div.innerHTML = `${esc(c)} ${required?'<span style="color:var(--red)">*</span>':''}<input type="text" data-fe-col="${esc(c)}" tabindex="${i+1}">`; wrap.appendChild(div); }); wrap.querySelectorAll('input').forEach(inp=>{ inp.value
-= state.fastEntryDraft[inp.dataset.feCol] || ''; inp.addEventListener('input', ()=>{ state.fastEntryDraft[inp.dataset.feCol]=inp.value; persist(); }); inp.addEventListener('keydown', e=>{ if(e.key==='Enter'){ e.preventDefault(); const next = wrap.querySelectorAll('input')[Array.from(wrap.querySelectorAll('input')).indexOf(inp)+1];
-if(next) next.focus(); else fastEntrySave(); } }); }); } function fastEntrySave(){ if(state.session==='stopped'){ toast('Session stopped — press Start to resume entry'); return; } const data = {}; state.columns.forEach(c=> data[c] = state.fastEntryDraft[c]||'');
-const missingRequired = state.columns.filter(c=> state.validationRules[c] && state.validationRules[c].required && !data[c]); if(missingRequired.length){ toast('Missing required: '+missingRequired.join(', ')); return; } snapshot(); const id = newId();
-state.original[id] = Object.assign({}, data); state.rows.push({__id:id, __status:'pending', __modified:false, __verified:false, data}); state.fastEntryDraft = {}; log('Fast-entry: added record #'+state.rows.length); recomputeAll(); renderFastEntryForm();
-toast('Record saved'); } /* ---------- Data Table ---------- */ function filteredRows(){ let rows = state.rows; const q = state.filters.query.trim().toLowerCase(); if(q) rows = rows.filter(r=> state.columns.some(c=> String(r.data[c]||'').toLowerCase().includes(q)));
-if(state.filters.status!=='all'){ if(state.filters.status==='modified') rows = rows.filter(r=>r.__modified); else rows = rows.filter(r=>r.__status===state.filters.status); } return rows; } function renderDataTable(){ const rows = filteredRows(); const
-perPage = Number(settings.rowsPerPage)||50; const totalPages = Math.max(1, Math.ceil(rows.length/perPage)); if(state.page>totalPages) state.page=totalPages; const start = (state.page-1)*perPage; const pageRows = rows.slice(start, start+perPage); let h
-= '
-<table>
-    <thead>
-        <tr>
-            <th style="width:26px;"><input type="checkbox" id="select-all"></th>
-            <th style="width:34px;">#</th>
-            <th>Status</th>'; state.columns.forEach(c=> h+= `
-            <th data-col="${esc(c)}">${esc(c)} <span style="opacity:.5;">⇅</span> <button class="btn ghost" data-delcol="${esc(c)}" title="Delete column" style="padding:0 4px;">✕</button></th>`); h += '</tr>
-    </thead>
-    <tbody>'; pageRows.forEach(row=>{ const idx = rowIndex(row.__id); h += `
-        <tr data-id="${row.__id}">
-            <td><input type="checkbox" class="row-select" data-id="${row.__id}" ${state.selected.has(row.__id)? 'checked': ''}></td>
-            <td>${idx+1}</td>`; h += `
-            <td><span class="badge ${row.__status}">${row.__status}</span>${row.__modified?' <span class="badge modified">mod</span>':''}</td>`; state.columns.forEach(c=>{ h += `
-            <td contenteditable="true" data-id="${row.__id}" data-col="${esc(c)}">${esc(row.data[c])}</td>`; }); h += '</tr>'; }); h += '</tbody>
-</table>'; $('#data-table-wrap').innerHTML = h; $('#table-count').textContent = `${rows.length} record(s) shown (of ${state.rows.length} total)`; $('#page-info').textContent = `Page ${state.page} / ${totalPages}`; $('#select-all').addEventListener('change', e=>{
-pageRows.forEach(r=> e.target.checked? state.selected.add(r.__id) : state.selected.delete(r.__id)); renderDataTable(); }); $all('.row-select').forEach(cb=> cb.addEventListener('change', ()=>{ cb.checked? state.selected.add(cb.dataset.id) : state.selected.delete(cb.dataset.id);
-})); $all('td[contenteditable]').forEach(td=>{ td.addEventListener('blur', ()=>{ const row = state.rows.find(r=>r.__id===td.dataset.id); const newVal = td.textContent; if(row.data[td.dataset.col] !== newVal){ snapshot(); row.data[td.dataset.col] = newVal;
-row.__modified = true; recomputeAll(false); } }); }); $all('th[data-col]').forEach(th=>{ th.addEventListener('click', (e)=>{ if(e.target.tagName==='BUTTON') return; const col = th.dataset.col; th._dir = th._dir==='asc'? 'desc':'asc'; state.rows.sort((a,b)=>{
-const av=String(a.data[col]||''), bv=String(b.data[col]||''); return th._dir==='asc'? av.localeCompare(bv) : bv.localeCompare(av); }); renderDataTable(); }); }); $all('[data-delcol]').forEach(btn=> btn.addEventListener('click', e=>{ e.stopPropagation();
-const col = btn.dataset.delcol; confirmModal('Delete column?', `Remove column "${col}" from all ${state.rows.length} records? This cannot be undone except via Undo.`, ()=>{ snapshot(); state.columns = state.columns.filter(c=>c!==col); state.rows.forEach(r=>
-delete r.data[col]); log('Deleted column "'+col+'"'); recomputeAll(); }); })); } /* ---------- Quality score & recompute ---------- */ function computeQuality(){ if(!state.rows.length) return null; const totalCells = state.rows.length*state.columns.length
-|| 1; let filled=0; state.rows.forEach(r=> state.columns.forEach(c=>{ if(String(r.data[c]||'').trim()!=='') filled++; })); const completeness = filled/totalCells; const errorRows = new Set(state.validationErrors.map(e=>e.id)).size; const validity = 1
-- (errorRows/state.rows.length); const dupRows = new Set(state.duplicateGroups.flat()).size; const uniqueness = 1 - (dupRows/state.rows.length); const score = Math.round(((completeness*0.4)+(validity*0.35)+(uniqueness*0.25))*100); return Math.max(0, Math.min(100,
-score)); } function recomputeAll(rerenderTable=true){ persist(); renderDashboard(); if(rerenderTable) renderDataTable(); renderStepper(); renderNavBadges(); } function renderNavBadges(){ const errCount = new Set(state.validationErrors.map(e=>e.id)).size;
-const dupCount = new Set(state.duplicateGroups.flat()).size; const be = $('#badge-validate'); be.style.display = errCount? 'inline-block':'none'; be.textContent = errCount; const bd = $('#badge-dupes'); bd.style.display = dupCount? 'inline-block':'none';
-bd.textContent = dupCount; } function renderStepper(){ const steps = [ {k:'import', label:'1. Import', done: state.rows.length>0}, {k:'preview', label:'2. Preview', done: state.rows.length>0}, {k:'clean', label:'3. Clean', done: state.rows.some(r=>r.__modified)},
-{k:'validate', label:'4. Validate', done: state.validationErrors.length>=0 && Object.keys(state.validationRules).length>0}, {k:'dupes', label:'5. Detect Duplicates', done: state.duplicateGroups.length>0}, {k:'verify', label:'6. Verify', done: state.rows.some(r=>r.__status==='verified')},
-{k:'export', label:'7. Export', done:false} ]; let currentSet=false; $('#stepper').innerHTML = steps.map(s=>{ let cls='step'; if(s.done) cls+=' done'; else if(!currentSet){ cls+=' now'; currentSet=true; } return `<span class="${cls}">${s.label}</span>`;
-}).join(''); } function renderDashboard(){ const total = state.rows.length; const verified = state.rows.filter(r=>r.__status==='verified').length; const errors = new Set(state.validationErrors.map(e=>e.id)).size; const dupes = new Set(state.duplicateGroups.flat()).size;
-const pending = total - verified; $('#stat-total').textContent = total; $('#stat-completed').textContent = verified; $('#stat-pending').textContent = pending; $('#stat-errors').textContent = errors; $('#stat-dupes').textContent = dupes; $('#stat-verified').textContent
-= verified; $('#stat-remaining').textContent = Math.max(0,total-verified); const q = computeQuality(); $('#stat-quality').textContent = q===null? '–' : q+'%'; const pct = total? Math.round((verified/total)*100) : 0; $('#progress-bar').style.width = pct+'%';
-$('#progress-label').textContent = `Processed: ${verified} / ${total} · ${pct}% Complete`; $('#session-state').textContent = 'Session: '+state.session; } /* ---------- Error Center ---------- */ function renderErrorCenter(){ if(!state.validationErrors.length){
-$('#error-summary').innerHTML='
-<span class="small">No errors detected yet — run Validation first.</span>'; $('#error-table').innerHTML=''; return; } $('#error-summary').innerHTML = `<strong>${state.validationErrors.length}</strong> issue(s) across <strong>${new Set(state.validationErrors.map(e=>e.id)).size}</strong>record(s).`;
-let h='
-<table>
-    <thead>
-        <tr>
-            <th>Row</th>
-            <th>Column</th>
-            <th>Error type</th>
-            <th>Current value</th>
-            <th>Expected</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>'; state.validationErrors.forEach((e,i)=>{ const row = state.rows.find(r=>r.__id===e.id); const expected = {invalid:'Valid '+ (state.validationRules[e.col]?.type||'value'), missing:'Any non-empty value', duplicate:'A unique value'}[e.type] || '';
-        h += `
-        <tr>
-            <td>${rowIndex(e.id)+1}</td>
-            <td>${esc(e.col)}</td>
-            <td>${esc(e.msg)}</td>
-            <td>${esc(row?row.data[e.col]:'')}</td>
-            <td>${esc(expected)}</td>
-            <td class="btn-row"><button class="btn" data-err-fix="${i}">Fix</button><button class="btn ghost" data-err-ignore="${i}">Ignore</button><button class="btn ghost" data-err-goto="${e.id}">Go to Row</button></td>
-        </tr>`; }); h+='
-    </tbody>
-</table>'; $('#error-table').innerHTML = h; $all('[data-err-fix]').forEach(b=> b.addEventListener('click', ()=>{ const e = state.validationErrors[Number(b.dataset.errFix)]; const row = state.rows.find(r=>r.__id===e.id); const val = prompt('New value for "'+e.col+'"',
-row.data[e.col]||''); if(val===null) return; snapshot(); row.data[e.col]=val; row.__modified=true; log('Fixed "'+e.col+'" from Error Center on record #'+(rowIndex(e.id)+1)); runValidation(); })); $all('[data-err-ignore]').forEach(b=> b.addEventListener('click',
-()=>{ const idx = Number(b.dataset.errIgnore); state.validationErrors.splice(idx,1); renderErrorCenter(); recomputeAll(); })); $all('[data-err-goto]').forEach(b=> b.addEventListener('click', ()=>{ switchView('table'); state.filters.query=''; $('#table-search').value='';
-setTimeout(()=>{ const tr = document.querySelector(`tr[data-id="${b.dataset.errGoto}"]`); if(tr) tr.scrollIntoView({block:'center'}); },50); })); } /* ---------- Export ---------- */ function currentRowsData(){ return state.rows.map(r=>r.data); } function
-exportSet(kind, format){ let rows; if(kind==='all') rows = currentRowsData(); else if(kind==='cleaned') rows = state.rows.filter(r=>r.__modified).map(r=>r.data); else if(kind==='verified') rows = state.rows.filter(r=>r.__status==='verified').map(r=>r.data);
-else if(kind==='errors') rows = state.rows.filter(r=> state.validationErrors.some(e=>e.id===r.__id)).map(r=>r.data); else if(kind==='dupes') rows = state.rows.filter(r=> state.duplicateGroups.flat().includes(r.__id)).map(r=>r.data); if(!rows.length){
-toast('Nothing to export in this set'); return; } if(format==='csv') download(`data-entry-${kind}.csv`, toCSV(state.columns, rows), 'text/csv'); else download(`data-entry-${kind}.json`, JSON.stringify(rows,null,2), 'application/json'); log(`Exported ${rows.length}
-record(s) as ${kind} (${format})`); } function createBackup(){ const backup = {version:1, exportedAt:new Date().toISOString(), columns:state.columns, rows:state.rows, original:state.original, validationRules:state.validationRules, settings}; download('data-entry-backup-'+Date.now()+'.json',
-JSON.stringify(backup,null,2), 'application/json'); log('Created full project backup'); } function restoreBackup(file){ const reader = new FileReader(); reader.onload = ()=>{ let parsed; try{ parsed = JSON.parse(reader.result); }catch(e){ toast('Invalid
-backup file'); return; } confirmModal('Restore backup?', 'This will replace your current dataset, rules and progress with the contents of this backup file. This cannot be undone.', ()=>{ state.columns = parsed.columns||[]; state.rows = parsed.rows||[];
-state.original = parsed.original||{}; state.validationRules = parsed.validationRules||{}; if(parsed.settings) settings = Object.assign(settings, parsed.settings); state.validationErrors=[]; state.duplicateGroups=[]; log('Restored project from backup file');
-recomputeAll(); applySettingsToUI(); toast('Backup restored'); renderValidationRulesUI(); }); }; reader.readAsText(file); } /* ---------- Demo data ---------- */ function loadDemoData(){ const firstNames=['Rahul','Priya','Amit','Sneha','Vikram','Anjali','Rohan','Kavita','Suresh','Neha','Arjun','Pooja'];
-const lastNames=['Sharma','Verma','Gupta','Singh','Yadav','Kumar','Patel','Mehta','Joshi','Reddy']; const cities=['Delhi','Mumbai','Ghaziabad','Pune','Bengaluru','Lucknow','Jaipur','Noida']; const cols = ['Name','Phone','Email','City','Order ID','Order
-Date']; const rows = []; for(let i=0;i
-<100;i++){ const fn=f irstNames[Math.floor(Math.random()*firstNames.length)]; const ln=l astNames[Math.floor(Math.random()*lastNames.length)]; let name=( Math.random()<0.15)? (fn+ ' '+ln).toLowerCase() : fn+ ' '+ln; let phone='9' +Math.floor(100000000+Math.random()*899999999);
-    if(Math.random()<0.1) phone=p hone.slice(0,6); // invalid short phone let email=( fn+ '.'+ln+ '@example.com').toLowerCase(); if(Math.random()<0.12) email=e mail.replace( '.com', ''); // invalid email if(Math.random()<0.08) email='' ; const city=c ities[Math.floor(Math.random()*cities.length)];
-    const orderId='OR' +(1000+i); const date=` 2026-${pad(1+Math.floor(Math.random()*9))}-${pad(1+Math.floor(Math.random()*27))}`; rows.push({Name:Math.random()<0.05? '' : name, Phone:phone, Email:email, City:city, 'Order ID':orderId, 'Order Date':date});
-    if(Math.random()<0.1) rows.push(Object.assign({}, rows[rows.length-1])); // duplicate } loadDataset(cols, rows, 'Demo Data (sample/fake)'); toast( 'Demo data loaded — labeled as sample/fake data'); } /* ---------- Modal ---------- */ let modalConfirmCb=null;
-    function confirmModal(title, body, onConfirm){ $( '#modal-title').textContent=title; $( '#modal-body').textContent=body; modalConfirmCb=onConfirm; $( '#modal-bg').classList.add( 'active'); } $( '#modal-cancel').addEventListener( 'click', ()=> $('#modal-bg').classList.remove('active')); $('#modal-confirm').addEventListener('click', ()=>{ $('#modal-bg').classList.remove('active'); if(modalConfirmCb) modalConfirmCb(); }); /* ---------- Activity log render ---------- */ function renderLog(){ if(!state.activity.length){
-    $('#log-list').innerHTML='
-    <span class="small">No activity yet.</span>'; return; } $('#log-list').innerHTML = state.activity.map(a=> `
-    <div class="log-item"><span>${esc(a.action)}</span><span class="t">${new Date(a.t).toLocaleString()}</span></div>`).join(''); } /* ---------- Navigation ---------- */ function switchView(view){ $all('.view').forEach(v=>v.classList.remove('active')); $('#view-'+view).classList.add('active');
-    $all('.nav-item').forEach(n=>n.classList.toggle('active', n.dataset.view===view)); $('#view-title').textContent = $('.nav-item.active .label')?.textContent || view; if(view==='validate') renderValidationRulesUI(); if(view==='duplicates') renderDupeColumnsUI();
-    if(view==='verify') renderVerify(); if(view==='fastentry') renderFastEntryForm(); if(view==='table') renderDataTable(); if(view==='log') renderLog(); } $all('.nav-item').forEach(n=> n.addEventListener('click', ()=> switchView(n.dataset.view))); $all('[data-view-link]').forEach(el=>
-    el.addEventListener('click', ()=> switchView(el.dataset.viewLink))); /* ---------- Wire up: Import ---------- */ const dz = $('#dropzone'); dz.addEventListener('click', ()=> $('#file-input').click()); dz.addEventListener('dragover', e=>{ e.preventDefault();
-    dz.classList.add('drag'); }); dz.addEventListener('dragleave', ()=> dz.classList.remove('drag')); dz.addEventListener('drop', e=>{ e.preventDefault(); dz.classList.remove('drag'); if(e.dataTransfer.files[0]) handleFile(e.dataTransfer.files[0]); });
-    $('#file-input').addEventListener('change', e=>{ if(e.target.files[0]) handleFile(e.target.files[0]); }); $('#btn-parse-paste').addEventListener('click', ()=>{ const text = $('#paste-area').value; if(!text.trim()){ toast('Paste something first');
-    return; } importFromText(text, 'pasted text'); }); $('#btn-manual-cols').addEventListener('click', ()=>{ const cols = $('#manual-columns').value.split(',').map(s=>s.trim()).filter(Boolean); if(!cols.length){ toast('Enter at least one column name');
-    return; } loadDataset(cols, [], 'manual entry'); toast('Empty dataset created — add rows in Data Table'); }); /* ---------- Wire up: Table ---------- */ $('#table-search').addEventListener('input', e=>{ state.filters.query=e.target.value; state.page=1;
-    renderDataTable(); }); $('#table-filter-status').addEventListener('change', e=>{ state.filters.status=e.target.value; state.page=1; renderDataTable(); }); $('#btn-clear-filters').addEventListener('click', ()=>{ state.filters={status:'all',query:''};
-    $('#table-search').value=''; $('#table-filter-status').value='all'; state.page=1; renderDataTable(); }); $('#btn-add-row').addEventListener('click', ()=>{ snapshot(); const id=newId(); const data={}; state.columns.forEach(c=>data[c]=''); state.original[id]=Object.assign({},data);
-    state.rows.push({__id:id,__status:'pending',__modified:false,__verified:false,data}); log('Added a blank row'); recomputeAll(); }); $('#btn-add-col').addEventListener('click', ()=>{ const name = prompt('New column name:'); if(!name) return; if(state.columns.includes(name)){
-    toast('Column already exists'); return; } snapshot(); state.columns.push(name); state.rows.forEach(r=> r.data[name]=''); log('Added column "'+name+'"'); recomputeAll(); }); $('#btn-undo').addEventListener('click', undo); $('#btn-redo').addEventListener('click',
-    redo); $('#btn-delete-selected').addEventListener('click', ()=>{ if(!state.selected.size){ toast('No rows selected'); return; } confirmModal('Delete selected records?', `Permanently remove ${state.selected.size} record(s)?`, ()=>{ snapshot(); state.rows
-    = state.rows.filter(r=> !state.selected.has(r.__id)); state.selected.clear(); log('Deleted selected records'); recomputeAll(); }); }); $('#page-prev').addEventListener('click', ()=>{ if(state.page>1){ state.page--; renderDataTable(); } }); $('#page-next').addEventListener('click',
-    ()=>{ state.page++; renderDataTable(); }); /* ---------- Wire up: Clean ---------- */ $('#btn-clean-run').addEventListener('click', ()=>{ const ops = $all('.clean-op:checked').map(el=>el.value); if(!ops.length){ toast('Select at least one cleaning
-    operation'); return; } runCleaning(ops); }); $('#btn-clean-undo').addEventListener('click', undoToOriginal); /* ---------- Wire up: Validate ---------- */ $('#btn-run-validation').addEventListener('click', runValidation); /* ---------- Wire up: Duplicates
-    ---------- */ $('#dupe-mode').addEventListener('change', renderDupeColumnsUI); $('#btn-run-dupes').addEventListener('click', runDuplicateDetection); /* ---------- Wire up: Verify ---------- */ $('#verify-accept').addEventListener('click', verifyAccept);
-    $('#verify-reject').addEventListener('click', verifyReject); $('#verify-edit').addEventListener('click', verifyEditPrompt); $('#verify-mark').addEventListener('click', verifyMark); $('#verify-prev').addEventListener('click', ()=>verifyNav(-1)); $('#verify-next').addEventListener('click',
-    ()=>verifyNav(1)); $('#verify-prev-err').addEventListener('click', ()=>verifyJumpToIssue(-1)); $('#verify-next-err').addEventListener('click', ()=>verifyJumpToIssue(1)); document.addEventListener('keydown', e=>{ if(!document.getElementById('view-verify').classList.contains('active'))
-    return; if(document.activeElement && ['INPUT','TEXTAREA'].includes(document.activeElement.tagName)) return; if(e.ctrlKey && e.key==='Enter'){ e.preventDefault(); verifyAccept(); } else if(e.key==='Enter'){ e.preventDefault(); verifyNav(1); } else
-    if(e.key==='Escape'){ e.preventDefault(); renderVerify(); } else if(e.key==='ArrowRight'){ verifyNav(1); } else if(e.key==='ArrowLeft'){ verifyNav(-1); } else if(e.ctrlKey && e.key.toLowerCase()==='z'){ e.preventDefault(); undo(); renderVerify();
-    } }); /* ---------- Wire up: Fast Entry ---------- */ $('#fastentry-save').addEventListener('click', fastEntrySave); $('#fastentry-new').addEventListener('click', ()=>{ state.fastEntryDraft={}; renderFastEntryForm(); }); $('#auto-next-toggle').addEventListener('change',
-    e=>{ settings.autoNext = e.target.checked; persist(); }); /* ---------- Wire up: Export ---------- */ $all('[data-export]').forEach(btn=> btn.addEventListener('click', ()=>{ const [kind, format] = btn.dataset.export.split('-'); exportSet(kind, format);
-    })); $('#btn-backup').addEventListener('click', createBackup); $('#btn-restore').addEventListener('click', ()=>{ const f = $('#restore-input').files[0]; if(!f){ toast('Choose a backup file first'); return; } restoreBackup(f); }); /* ---------- Wire
-    up: Settings ---------- */ function applySettingsToUI(){ $('#set-dateformat').value = settings.dateFormat; $('#set-capitalization').value = settings.capitalization; $('#set-autosave').value = settings.autosave; $('#set-strictness').value = settings.strictness;
-    $('#set-dupe-sensitivity').value = settings.dupeSensitivity; $('#set-rowsperpage').value = settings.rowsPerPage; $('#auto-next-toggle').checked = settings.autoNext; document.body.dataset.theme = settings.darkMode? 'dark':'light'; $('#theme-toggle').textContent
-    = settings.darkMode? '☀️ Light mode':'🌙 Dark mode'; } $('#btn-save-settings').addEventListener('click', ()=>{ settings.dateFormat = $('#set-dateformat').value; settings.capitalization = $('#set-capitalization').value; settings.autosave = Number($('#set-autosave').value)||20;
-    settings.strictness = $('#set-strictness').value; settings.dupeSensitivity = $('#set-dupe-sensitivity').value; settings.rowsPerPage = Number($('#set-rowsperpage').value)||50; persist(); renderDataTable(); toast('Settings saved'); }); $('#btn-clear-local').addEventListener('click',
-    ()=>{ confirmModal('Clear all local data?', 'This permanently deletes the dataset, settings and activity log stored in this browser. Export a backup first if you need one.', ()=>{ localStorage.removeItem(STORE_KEY); localStorage.removeItem(SETTINGS_KEY);
-    location.reload(); }); }); $('#theme-toggle').addEventListener('click', ()=>{ settings.darkMode = !settings.darkMode; applySettingsToUI(); persist(); }); /* ---------- Dashboard session + demo ---------- */ $('#btn-start').addEventListener('click',
-    ()=>{ state.session='running'; renderDashboard(); log('Session started'); }); $('#btn-pause').addEventListener('click', ()=>{ if(state.session==='running'){ state.session='paused'; renderDashboard(); log('Session paused'); } }); $('#btn-resume').addEventListener('click',
-    ()=>{ if(state.session==='paused'){ state.session='running'; renderDashboard(); log('Session resumed'); } }); $('#btn-stop').addEventListener('click', ()=>{ state.session='stopped'; renderDashboard(); log('Session stopped'); }); $('#quick-demo').addEventListener('click',
-    ()=>{ confirmModal('Load demo data?', 'This replaces your current dataset with ~100 fake sample records for testing.', loadDemoData); }); /* ---------- Autosave interval ---------- */ let autosaveTimer = setInterval(()=> persist(), (Number(settings.autosave)||20)*1000);
-    /* ---------- Init ---------- */ function init(){ loadPersisted(); applySettingsToUI(); renderLog(); recomputeAll(); renderValidationRulesUI(); if(!state.rows.length){ // no data yet - land on dashboard, prompt import via UI already visible } switchView('dashboard');
-    } init(); })();
-    </script>
-    </body>
-
-    </htinit(); })(); </script>
-    </body>
-
-    </html>
-    switchView('dashboard'); } init(); })();
-    </script>
-    </body>
-
-    </html> if (v === undefined || v === null) v = ''; let original = v; if (ops.includes('trim')) { const t = String(v).replace(/\s+/g, ' ').trim(); if (t !== v) { v = t; report.trimmed++; } } if (ops.includes('case') && looksLikeName(col) && v) { const t =
-    titleCase(String(v)); if (t !== v) { v = t; report.cased++; } } if (ops.includes('date') && looksLikeDate(col) && v) { const t = standardizeDate(v); if (t !== v) { v = t; report.datesFixed++; } } if (ops.includes('number') && !looksLikePhone(col)
-    && /^[\d.,\- ]+$/.test(String(v)) && v) { const t = String(v).replace(/[^\d.\-]/g, ''); if (t && t !== v) { v = t; report.numbersFixed++; } } if (ops.includes('phone') && looksLikePhone(col) && v && !isValidPhone(v)) report.invalidPhones++; if (ops.includes('email')
-    && looksLikeEmail(col) && v && !isValidEmail(v)) report.invalidEmails++; if (ops.includes('chars') && /[^\x20-\x7E]/.test(String(v))) report.suspicious++; if (ops.includes('empty') && String(v).trim() === '') report.emptyCells++; if (v !== original)
-    { row.data[col] = v; changed = true; } }); if (changed) { row.__modified = true; if (row.__status === 'pending') row.__status = 'pending'; } }); log('Cleaning run: ' + JSON.stringify(report)); recomputeAll(); renderCleanReport(report); } function
-    renderCleanReport(r) { $('#clean-report').innerHTML = `
-    <div class="grid grid-4">
-        <div class="pill">Trimmed: ${r.trimmed}</div>
-        <div class="pill">Recapitalized: ${r.cased}</div>
-        <div class="pill">Invalid phones flagged: ${r.invalidPhones}</div>
-        <div class="pill">Invalid emails flagged: ${r.invalidEmails}</div>
-        <div class="pill">Dates standardized: ${r.datesFixed}</div>
-        <div class="pill">Numbers standardized: ${r.numbersFixed}</div>
-        <div class="pill">Suspicious characters: ${r.suspicious}</div>
-        <div class="pill">Empty cells: ${r.emptyCells}</div>
-    </div>`; } function undoToOriginal() { confirmModal('Revert to original import?', 'This restores every record to its originally imported values and discards cleaning/edits. This does not affect verification status history.', () => { snapshot(); state.rows.forEach(row
-    => { row.data = Object.assign({}, state.original[row.__id]); row.__modified = false; }); log('Reverted all data to original imported values'); recomputeAll(); renderCleanReport({ trimmed: 0, cased: 0, invalidPhones: 0, invalidEmails: 0, datesFixed:
-    0, numbersFixed: 0, suspicious: 0, emptyCells: 0 }); toast('Reverted to original data'); }); } /* ---------- Validation ---------- */ function renderValidationRulesUI() { const wrap = $('#validation-rules-wrap'); wrap.innerHTML = ''; state.columns.forEach(col
-    => { const rule = state.validationRules[col] || { required: false, unique: false, type: 'text', pattern: '' }; state.validationRules[col] = rule; const div = document.createElement('div'); div.className = 'row-flex'; div.style.padding = '6px 0'; div.style.borderBottom
-    = '1px solid var(--line)'; div.innerHTML = `
-    <span class="col-tag" style="min-width:120px;">${esc(col)}</span>
-    <label class="check-row"><input type="checkbox" data-col="${esc(col)}" data-k="required" ${rule.required?'checked':''}> Required</label>
-    <label class="check-row"><input type="checkbox" data-col="${esc(col)}" data-k="unique" ${rule.unique?'checked':''}> Unique</label>
-    <select data-col="${esc(col)}" data-k="type">
-        ${['text','email','phone','date','number'].map(t=>`<option value="${t}" ${rule.type===t?'selected':''}>${t}</option>`).join('')}
-      </select>
-    <input type="text" data-col="${esc(col)}" data-k="pattern" placeholder="custom regex (optional)" value="${esc(rule.pattern)}" style="width:160px;"> `; wrap.appendChild(div); }); wrap.querySelectorAll('input,select').forEach(el=>{ el.addEventListener('change',
-    ()=>{ const col=el.dataset.col, k=el.dataset.k; const rule = state.validationRules[col]; rule[k] = el.type==='checkbox'? el.checked : el.value; }); }); } function runValidation(){ const errors = []; const uniqueTrack = {}; state.columns.forEach(c=>
-    uniqueTrack[c]={}); state.rows.forEach(row=>{ state.columns.forEach(col=>{ const rule = state.validationRules[col]; if(!rule) return; const v = row.data[col]!==undefined? String(row.data[col]).trim() : ''; if(rule.required && v===''){ errors.push({id:row.__id,col,type:'missing',severity:'yellow',msg:'Missing
-    value'}); return; } if(v===''){ return; } if(rule.type==='email' && !isValidEmail(v)) errors.push({id:row.__id,col,type:'invalid',severity:'red',msg:'Invalid email format'}); if(rule.type==='phone' && !isValidPhone(v)) errors.push({id:row.__id,col,type:'invalid',severity:'red',msg:'Invalid
-    phone number'}); if(rule.type==='date' && isNaN(new Date(standardizeDate(v)).getTime())) errors.push({id:row.__id,col,type:'invalid',severity:'red',msg:'Invalid date'}); if(rule.type==='number' && isNaN(Number(v))) errors.push({id:row.__id,col,type:'invalid',severity:'red',msg:'Not
-    a number'}); if(rule.pattern){ try{ if(!new RegExp(rule.pattern).test(v)) errors.push({id:row.__id,col,type:'invalid',severity:'red',msg:'Does not match custom pattern'}); }catch(e){} } if(rule.unique){ const key = v.toLowerCase(); uniqueTrack[col][key]
-    = (uniqueTrack[col][key]||0)+1; } }); }); Object.keys(uniqueTrack).forEach(col=>{ if(!state.validationRules[col] || !state.validationRules[col].unique) return; state.rows.forEach(row=>{ const v = String(row.data[col]||'').trim().toLowerCase(); if(v
-    && uniqueTrack[col][v]>1) errors.push({id:row.__id,col,type:'duplicate',severity:'orange',msg:'Possible duplicate value (must be unique)'}); }); }); state.validationErrors = errors; state.rows.forEach(row=>{ row.__status = errors.some(e=>e.id===row.__id)
-    ? 'error' : (row.__status==='error'? 'pending': row.__status); }); log('Validation run: '+errors.length+' issue(s) found'); recomputeAll(); renderValidationResults(); renderErrorCenter(); } function renderValidationResults(){ const counts = {red:0,
-    yellow:0, orange:0}; state.validationErrors.forEach(e=> counts[e.severity]++); $('#validation-summary').innerHTML = `
-    <div class="row-flex">
-        <span class="pill">🔴 Invalid: ${counts.red}</span>
-        <span class="pill">🟡 Missing: ${counts.yellow}</span>
-        <span class="pill">🟠 Possible duplicate: ${counts.orange}</span>
-        <span class="pill">🟢 Valid records: ${Math.max(0,state.rows.length - new Set(state.validationErrors.map(e=>e.id)).size)}</span>
-    </div>`; let h = '
-    <table>
-        <thead>
-            <tr>
-                <th>Row</th>
-                <th>Column</th>
-                <th>Issue</th>
-                <th>Value</th>
-            </tr>
-        </thead>
-        <tbody>'; state.validationErrors.slice(0,500).forEach(e=>{ const row = state.rows.find(r=>r.__id===e.id); const icon = e.severity==='red'?'🔴':e.severity==='yellow'?'🟡':'🟠'; h += `
-            <tr>
-                <td>${rowIndex(e.id)+1}</td>
-                <td>${esc(e.col)}</td>
-                <td>${icon} ${esc(e.msg)}</td>
-                <td>${esc(row?row.data[e.col]:'')}</td>
-            </tr>`; }); h+='
-        </tbody>
-    </table>'; $('#validation-table').innerHTML = h; } function rowIndex(id){ return state.rows.findIndex(r=>r.__id===id); } /* ---------- Duplicates ---------- */ function renderDupeColumnsUI(){ const wrap = $('#dupe-columns-wrap'); const mode = $('#dupe-mode').value;
-    if(mode!=='column'){ wrap.innerHTML=''; return; } wrap.innerHTML = state.columns.map(c=>`<label class="check-row"><input type="checkbox" class="dupe-col" value="${esc(c)}"> ${esc(c)}</label>`).join(' '); } function runDuplicateDetection(){ const mode
-    = $('#dupe-mode').value; let cols = state.columns; if(mode==='column'){ cols = $all('.dupe-col:checked').map(el=>el.value); if(!cols.length){ toast('Select at least one column'); return; } } const loose = settings.dupeSensitivity==='loose'; const
-    groups = {}; state.rows.forEach(row=>{ const key = cols.map(c=>{ let v = String(row.data[c]||''); if(loose) v = v.trim().toLowerCase().replace(/\s+/g,' '); return v; }).join('␟'); if(!key.replace(/␟/g,'').trim()) return; (groups[key] = groups[key]||[]).push(row.__id);
-    }); const dupeGroups = Object.values(groups).filter(g=>g.length>1); state.duplicateGroups = dupeGroups; state.rows.forEach(row=> { if(row.__status!=='error') row.__status = dupeGroups.some(g=>g.includes(row.__id)) ? 'duplicate' : (row.__status==='duplicate'?'pending':row.__status);
-    }); log('Duplicate detection run ('+mode+'): '+dupeGroups.length+' group(s) found'); recomputeAll(); renderDupeGroups(); } function renderDupeGroups(){ const wrap = $('#dupe-groups'); if(!state.duplicateGroups.length){ wrap.innerHTML='<span class="small">No duplicate groups found.</span>';
-    return; } wrap.innerHTML = state.duplicateGroups.map((g,gi)=>{ const rowsHtml = g.map(id=>{ const r = state.rows.find(x=>x.__id===id); if(!r) return ''; return `
-    <tr>
-        <td><input type="checkbox" class="dupe-keep" data-group="${gi}" data-id="${id}"></td>
-        <td>${rowIndex(id)+1}</td>${state.columns.slice(0,5).map(c=>'
-        <td>'+esc(r.data[c])+'</td>').join('')}</tr>`; }).join(''); return `
-    <div class="card" style="margin-bottom:12px;">
-        <div class="flex-between"><strong>Duplicate Group #${gi+1}</strong>
-            <div class="btn-row">
-                <button class="btn" data-dupe-action="first" data-group="${gi}">Keep first</button>
-                <button class="btn" data-dupe-action="latest" data-group="${gi}">Keep latest</button>
-                <button class="btn" data-dupe-action="selected" data-group="${gi}">Keep selected</button>
-                <button class="btn ghost" data-dupe-action="ignore" data-group="${gi}">Ignore</button>
-            </div>
-        </div>
-        <div class="table-scroll" style="margin-top:8px; max-height:220px;">
-            <table>
-                <thead>
-                    <tr>
-                        <th>Keep?</th>
-                        <th>#</th>${state.columns.slice(0,5).map(c=>'
-                        <th>'+esc(c)+'</th>').join('')}</tr>
-                </thead>
-                <tbody>${rowsHtml}</tbody>
-            </table>
-        </div>
-    </div>`; }).join(''); wrap.querySelectorAll('[data-dupe-action]').forEach(btn=>{ btn.addEventListener('click', ()=>{ const gi = Number(btn.dataset.group); const action = btn.dataset.dupeAction; const group = state.duplicateGroups[gi]; if(action==='ignore'){
-    toast('Group ignored'); return; } let keepIds = []; if(action==='first') keepIds=[group[0]]; else if(action==='latest') keepIds=[group[group.length-1]]; else if(action==='selected') keepIds = wrap.querySelectorAll(`.dupe-keep[data-group="${gi}"]:checked`).length
-    ? Array.from(wrap.querySelectorAll(`.dupe-keep[data-group="${gi}"]:checked`)).map(c=>c.dataset.id) : null; if(!keepIds){ toast('Select at least one record to keep'); return; } const toRemove = group.filter(id=>!keepIds.includes(id)); confirmModal('Remove
-    duplicate records?', `This will permanently remove ${toRemove.length} record(s) from Group #${gi+1}. This cannot be undone except via Undo (Ctrl+Z) immediately after.`, ()=>{ snapshot(); state.rows = state.rows.filter(r=>!toRemove.includes(r.__id));
-    state.duplicateGroups[gi] = keepIds; log(`Removed ${toRemove.length} duplicate record(s) from group #${gi+1} ("${action}")`); recomputeAll(); renderDupeGroups(); toast('Duplicates removed'); }); }); }); } /* ---------- Verify workspace ----------
-    */ function refreshVerifyQueue(){ state.verifyIds = state.rows.filter(r=> r.__status!=='verified').map(r=>r.__id); if(!state.verifyIds.length) state.verifyIds = state.rows.map(r=>r.__id); if(state.verifyIndex>=state.verifyIds.length) state.verifyIndex=0;
-    } function renderVerify(){ refreshVerifyQueue(); const total = state.verifyIds.length; $('#verify-position').textContent = `Record ${total? state.verifyIndex+1:0} / ${total}`; if(!total){ $('#verify-source').innerHTML='
-    <div class="small">No records to verify.</div>'; $('#verify-entered').innerHTML=''; return; } const id = state.verifyIds[state.verifyIndex]; const row = state.rows.find(r=>r.__id===id); const orig = state.original[id]||{}; let srcHtml='', entHtml=''; state.columns.forEach(c=>{
-    const o = orig[c]!==undefined? String(orig[c]): ''; const n = row.data[c]!==undefined? String(row.data[c]): ''; const diff = o!==n; srcHtml += `
-    <div class="verify-field"><span>${esc(c)}</span><span>${diff? '<span class="diff-old">'+esc(o)+'</span>' : esc(o)}</span>
-    </div>`; entHtml += `
-    <div class="verify-field"><span>${esc(c)}</span><span>${diff? '<span class="diff-new">'+esc(n)+'</span>' : esc(n)}</span>
-    </div>`; }); $('#verify-source').innerHTML = srcHtml; $('#verify-entered').innerHTML = entHtml; } function verifyNav(delta){ if(!state.verifyIds.length) return; state.verifyIndex = (state.verifyIndex + delta + state.verifyIds.length) % state.verifyIds.length;
-    renderVerify(); } function verifyAccept(){ if(!state.verifyIds.length) return; const id = state.verifyIds[state.verifyIndex]; const row = state.rows.find(r=>r.__id===id); row.__status='verified'; row.__verified=true; log('Verified record #'+(rowIndex(id)+1));
-    recomputeAll(); if(settings.autoNext) verifyNav(1); else renderVerify(); } function verifyReject(){ if(!state.verifyIds.length) return; const id = state.verifyIds[state.verifyIndex]; const row = state.rows.find(r=>r.__id===id); snapshot(); row.data
-    = Object.assign({}, state.original[id]); row.__modified=false; row.__status='pending'; log('Rejected changes, reverted record #'+(rowIndex(id)+1)); recomputeAll(); renderVerify(); } function verifyMark(){ if(!state.verifyIds.length) return; const
-    id = state.verifyIds[state.verifyIndex]; const row = state.rows.find(r=>r.__id===id); row.__status='verified'; row.__verified=true; recomputeAll(); renderVerify(); } function verifyEditPrompt(){ if(!state.verifyIds.length) return; const id = state.verifyIds[state.verifyIndex];
-    const row = state.rows.find(r=>r.__id===id); const col = prompt('Edit which column?\n'+state.columns.join(', ')); if(!col || !state.columns.includes(col)) return; const val = prompt('New value for "'+col+'"', row.data[col]||''); if(val===null) return;
-    snapshot(); row.data[col]=val; row.__modified=true; log('Edited "'+col+'" on record #'+(rowIndex(id)+1)); recomputeAll(); renderVerify(); } function verifyJumpToIssue(delta){ const ids = Array.from(new Set(state.validationErrors.map(e=>e.id).concat(state.duplicateGroups.flat())));
-    if(!ids.length){ toast('No flagged issues'); return; } let idx = ids.indexOf(state.verifyIds[state.verifyIndex]); idx = (idx + delta + ids.length) % ids.length; const targetId = ids[idx]; const vi = state.verifyIds.indexOf(targetId); state.verifyIndex
-    = vi>=0? vi : 0; renderVerify(); } /* ---------- Fast Entry ---------- */ function renderFastEntryForm(){ const wrap = $('#fastentry-form'); wrap.innerHTML=''; state.columns.forEach((c,i)=>{ const required = state.validationRules[c] && state.validationRules[c].required;
-    const div = document.createElement('label'); div.className='field'; div.innerHTML = `${esc(c)} ${required?'<span style="color:var(--red)">*</span>':''}<input type="text" data-fe-col="${esc(c)}" tabindex="${i+1}">`; wrap.appendChild(div); }); wrap.querySelectorAll('input').forEach(inp=>{
-    inp.value = state.fastEntryDraft[inp.dataset.feCol] || ''; inp.addEventListener('input', ()=>{ state.fastEntryDraft[inp.dataset.feCol]=inp.value; persist(); }); inp.addEventListener('keydown', e=>{ if(e.key==='Enter'){ e.preventDefault(); const next
-    = wrap.querySelectorAll('input')[Array.from(wrap.querySelectorAll('input')).indexOf(inp)+1]; if(next) next.focus(); else fastEntrySave(); } }); }); } function fastEntrySave(){ if(state.session==='stopped'){ toast('Session stopped — press Start to
-    resume entry'); return; } const data = {}; state.columns.forEach(c=> data[c] = state.fastEntryDraft[c]||''); const missingRequired = state.columns.filter(c=> state.validationRules[c] && state.validationRules[c].required && !data[c]); if(missingRequired.length){
-    toast('Missing required: '+missingRequired.join(', ')); return; } snapshot(); const id = newId(); state.original[id] = Object.assign({}, data); state.rows.push({__id:id, __status:'pending', __modified:false, __verified:false, data}); state.fastEntryDraft
-    = {}; log('Fast-entry: added record #'+state.rows.length); recomputeAll(); renderFastEntryForm(); toast('Record saved'); } /* ---------- Data Table ---------- */ function filteredRows(){ let rows = state.rows; const q = state.filters.query.trim().toLowerCase();
-    if(q) rows = rows.filter(r=> state.columns.some(c=> String(r.data[c]||'').toLowerCase().includes(q))); if(state.filters.status!=='all'){ if(state.filters.status==='modified') rows = rows.filter(r=>r.__modified); else rows = rows.filter(r=>r.__status===state.filters.status);
-    } return rows; } function renderDataTable(){ const rows = filteredRows(); const perPage = Number(settings.rowsPerPage)||50; const totalPages = Math.max(1, Math.ceil(rows.length/perPage)); if(state.page>totalPages) state.page=totalPages; const start
-    = (state.page-1)*perPage; const pageRows = rows.slice(start, start+perPage); let h = '
-    <table>
-        <thead>
-            <tr>
-                <th style="width:26px;"><input type="checkbox" id="select-all"></th>
-                <th style="width:34px;">#</th>
-                <th>Status</th>'; state.columns.forEach(c=> h+= `
-                <th data-col="${esc(c)}">${esc(c)} <span style="opacity:.5;">⇅</span> <button class="btn ghost" data-delcol="${esc(c)}" title="Delete column" style="padding:0 4px;">✕</button></th>`); h += '</tr>
-        </thead>
-        <tbody>'; pageRows.forEach(row=>{ const idx = rowIndex(row.__id); h += `
-            <tr data-id="${row.__id}">
-                <td><input type="checkbox" class="row-select" data-id="${row.__id}" ${state.selected.has(row.__id)? 'checked': ''}></td>
-                <td>${idx+1}</td>`; h += `
-                <td><span class="badge ${row.__status}">${row.__status}</span>${row.__modified?' <span class="badge modified">mod</span>':''}</td>`; state.columns.forEach(c=>{ h += `
-                <td contenteditable="true" data-id="${row.__id}" data-col="${esc(c)}">${esc(row.data[c])}</td>`; }); h += '</tr>'; }); h += '</tbody>
-    </table>'; $('#data-table-wrap').innerHTML = h; $('#table-count').textContent = `${rows.length} record(s) shown (of ${state.rows.length} total)`; $('#page-info').textContent = `Page ${state.page} / ${totalPages}`; $('#select-all').addEventListener('change',
-    e=>{ pageRows.forEach(r=> e.target.checked? state.selected.add(r.__id) : state.selected.delete(r.__id)); renderDataTable(); }); $all('.row-select').forEach(cb=> cb.addEventListener('change', ()=>{ cb.checked? state.selected.add(cb.dataset.id) : state.selected.delete(cb.dataset.id);
-    })); $all('td[contenteditable]').forEach(td=>{ td.addEventListener('blur', ()=>{ const row = state.rows.find(r=>r.__id===td.dataset.id); const newVal = td.textContent; if(row.data[td.dataset.col] !== newVal){ snapshot(); row.data[td.dataset.col] =
-    newVal; row.__modified = true; recomputeAll(false); } }); }); $all('th[data-col]').forEach(th=>{ th.addEventListener('click', (e)=>{ if(e.target.tagName==='BUTTON') return; const col = th.dataset.col; th._dir = th._dir==='asc'? 'desc':'asc'; state.rows.sort((a,b)=>{
-    const av=String(a.data[col]||''), bv=String(b.data[col]||''); return th._dir==='asc'? av.localeCompare(bv) : bv.localeCompare(av); }); renderDataTable(); }); }); $all('[data-delcol]').forEach(btn=> btn.addEventListener('click', e=>{ e.stopPropagation();
-    const col = btn.dataset.delcol; confirmModal('Delete column?', `Remove column "${col}" from all ${state.rows.length} records? This cannot be undone except via Undo.`, ()=>{ snapshot(); state.columns = state.columns.filter(c=>c!==col); state.rows.forEach(r=>
-    delete r.data[col]); log('Deleted column "'+col+'"'); recomputeAll(); }); })); } /* ---------- Quality score & recompute ---------- */ function computeQuality(){ if(!state.rows.length) return null; const totalCells = state.rows.length*state.columns.length
-    || 1; let filled=0; state.rows.forEach(r=> state.columns.forEach(c=>{ if(String(r.data[c]||'').trim()!=='') filled++; })); const completeness = filled/totalCells; const errorRows = new Set(state.validationErrors.map(e=>e.id)).size; const validity
-    = 1 - (errorRows/state.rows.length); const dupRows = new Set(state.duplicateGroups.flat()).size; const uniqueness = 1 - (dupRows/state.rows.length); const score = Math.round(((completeness*0.4)+(validity*0.35)+(uniqueness*0.25))*100); return Math.max(0,
-    Math.min(100, score)); } function recomputeAll(rerenderTable=true){ persist(); renderDashboard(); if(rerenderTable) renderDataTable(); renderStepper(); renderNavBadges(); } function renderNavBadges(){ const errCount = new Set(state.validationErrors.map(e=>e.id)).size;
-    const dupCount = new Set(state.duplicateGroups.flat()).size; const be = $('#badge-validate'); be.style.display = errCount? 'inline-block':'none'; be.textContent = errCount; const bd = $('#badge-dupes'); bd.style.display = dupCount? 'inline-block':'none';
-    bd.textContent = dupCount; } function renderStepper(){ const steps = [ {k:'import', label:'1. Import', done: state.rows.length>0}, {k:'preview', label:'2. Preview', done: state.rows.length>0}, {k:'clean', label:'3. Clean', done: state.rows.some(r=>r.__modified)},
-    {k:'validate', label:'4. Validate', done: state.validationErrors.length>=0 && Object.keys(state.validationRules).length>0}, {k:'dupes', label:'5. Detect Duplicates', done: state.duplicateGroups.length>0}, {k:'verify', label:'6. Verify', done: state.rows.some(r=>r.__status==='verified')},
-    {k:'export', label:'7. Export', done:false} ]; let currentSet=false; $('#stepper').innerHTML = steps.map(s=>{ let cls='step'; if(s.done) cls+=' done'; else if(!currentSet){ cls+=' now'; currentSet=true; } return `<span class="${cls}">${s.label}</span>`;
-    }).join(''); } function renderDashboard(){ const total = state.rows.length; const verified = state.rows.filter(r=>r.__status==='verified').length; const errors = new Set(state.validationErrors.map(e=>e.id)).size; const dupes = new Set(state.duplicateGroups.flat()).size;
-    const pending = total - verified; $('#stat-total').textContent = total; $('#stat-completed').textContent = verified; $('#stat-pending').textContent = pending; $('#stat-errors').textContent = errors; $('#stat-dupes').textContent = dupes; $('#stat-verified').textContent
-    = verified; $('#stat-remaining').textContent = Math.max(0,total-verified); const q = computeQuality(); $('#stat-quality').textContent = q===null? '–' : q+'%'; const pct = total? Math.round((verified/total)*100) : 0; $('#progress-bar').style.width
-    = pct+'%'; $('#progress-label').textContent = `Processed: ${verified} / ${total} · ${pct}% Complete`; $('#session-state').textContent = 'Session: '+state.session; } /* ---------- Error Center ---------- */ function renderErrorCenter(){ if(!state.validationErrors.length){
-    $('#error-summary').innerHTML='
-    <span class="small">No errors detected yet — run Validation first.</span>'; $('#error-table').innerHTML=''; return; } $('#error-summary').innerHTML = `<strong>${state.validationErrors.length}</strong> issue(s) across
-    <strong>${new Set(state.validationErrors.map(e=>e.id)).size}</strong> record(s).`; let h='
-    <table>
-        <thead>
-            <tr>
-                <th>Row</th>
-                <th>Column</th>
-                <th>Error type</th>
-                <th>Current value</th>
-                <th>Expected</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>'; state.validationErrors.forEach((e,i)=>{ const row = state.rows.find(r=>r.__id===e.id); const expected = {invalid:'Valid '+ (state.validationRules[e.col]?.type||'value'), missing:'Any non-empty value', duplicate:'A unique value'}[e.type] ||
-            ''; h += `
-            <tr>
-                <td>${rowIndex(e.id)+1}</td>
-                <td>${esc(e.col)}</td>
-                <td>${esc(e.msg)}</td>
-                <td>${esc(row?row.data[e.col]:'')}</td>
-                <td>${esc(expected)}</td>
-                <td class="btn-row"><button class="btn" data-err-fix="${i}">Fix</button><button class="btn ghost" data-err-ignore="${i}">Ignore</button><button class="btn ghost" data-err-goto="${e.id}">Go to Row</button></td>
-            </tr>`; }); h+='
-        </tbody>
-    </table>'; $('#error-table').innerHTML = h; $all('[data-err-fix]').forEach(b=> b.addEventListener('click', ()=>{ const e = state.validationErrors[Number(b.dataset.errFix)]; const row = state.rows.find(r=>r.__id===e.id); const val = prompt('New value for "'+e.col+'"',
-    row.data[e.col]||''); if(val===null) return; snapshot(); row.data[e.col]=val; row.__modified=true; log('Fixed "'+e.col+'" from Error Center on record #'+(rowIndex(e.id)+1)); runValidation(); })); $all('[data-err-ignore]').forEach(b=> b.addEventListener('click',
-    ()=>{ const idx = Number(b.dataset.errIgnore); state.validationErrors.splice(idx,1); renderErrorCenter(); recomputeAll(); })); $all('[data-err-goto]').forEach(b=> b.addEventListener('click', ()=>{ switchView('table'); state.filters.query=''; $('#table-search').value='';
-    setTimeout(()=>{ const tr = document.querySelector(`tr[data-id="${b.dataset.errGoto}"]`); if(tr) tr.scrollIntoView({block:'center'}); },50); })); } /* ---------- Export ---------- */ function currentRowsData(){ return state.rows.map(r=>r.data); }
-    function exportSet(kind, format){ let rows; if(kind==='all') rows = currentRowsData(); else if(kind==='cleaned') rows = state.rows.filter(r=>r.__modified).map(r=>r.data); else if(kind==='verified') rows = state.rows.filter(r=>r.__status==='verified').map(r=>r.data);
-    else if(kind==='errors') rows = state.rows.filter(r=> state.validationErrors.some(e=>e.id===r.__id)).map(r=>r.data); else if(kind==='dupes') rows = state.rows.filter(r=> state.duplicateGroups.flat().includes(r.__id)).map(r=>r.data); if(!rows.length){
-    toast('Nothing to export in this set'); return; } if(format==='csv') download(`data-entry-${kind}.csv`, toCSV(state.columns, rows), 'text/csv'); else download(`data-entry-${kind}.json`, JSON.stringify(rows,null,2), 'application/json'); log(`Exported
-    ${rows.length} record(s) as ${kind} (${format})`); } function createBackup(){ const backup = {version:1, exportedAt:new Date().toISOString(), columns:state.columns, rows:state.rows, original:state.original, validationRules:state.validationRules, settings};
-    download('data-entry-backup-'+Date.now()+'.json', JSON.stringify(backup,null,2), 'application/json'); log('Created full project backup'); } function restoreBackup(file){ const reader = new FileReader(); reader.onload = ()=>{ let parsed; try{ parsed
-    = JSON.parse(reader.result); }catch(e){ toast('Invalid backup file'); return; } confirmModal('Restore backup?', 'This will replace your current dataset, rules and progress with the contents of this backup file. This cannot be undone.', ()=>{ state.columns
-    = parsed.columns||[]; state.rows = parsed.rows||[]; state.original = parsed.original||{}; state.validationRules = parsed.validationRules||{}; if(parsed.settings) settings = Object.assign(settings, parsed.settings); state.validationErrors=[]; state.duplicateGroups=[];
-    log('Restored project from backup file'); recomputeAll(); applySettingsToUI(); toast('Backup restored'); renderValidationRulesUI(); }); }; reader.readAsText(file); } /* ---------- Demo data ---------- */ function loadDemoData(){ const firstNames=['Rahul','Priya','Amit','Sneha','Vikram','Anjali','Rohan','Kavita','Suresh','Neha','Arjun','Pooja'];
-    const lastNames=['Sharma','Verma','Gupta','Singh','Yadav','Kumar','Patel','Mehta','Joshi','Reddy']; const cities=['Delhi','Mumbai','Ghaziabad','Pune','Bengaluru','Lucknow','Jaipur','Noida']; const cols = ['Name','Phone','Email','City','Order ID','Order
-    Date']; const rows = []; for(let i=0;i
-    <100;i++){ const fn=f irstNames[Math.floor(Math.random()*firstNames.length)]; const ln=l astNames[Math.floor(Math.random()*lastNames.length)]; let name=( Math.random()<0.15)? (fn+ ' '+ln).toLowerCase() : fn+ ' '+ln; let phone='9' +Math.floor(100000000+Math.random()*899999999);
-        if(Math.random()<0.1) phone=p hone.slice(0,6); // invalid short phone let email=( fn+ '.'+ln+ '@example.com').toLowerCase(); if(Math.random()<0.12) email=e mail.replace( '.com', ''); // invalid email if(Math.random()<0.08) email='' ; const city=c
-        ities[Math.floor(Math.random()*cities.length)]; const orderId='OR' +(1000+i); const date=` 2026-${pad(1+Math.floor(Math.random()*9))}-${pad(1+Math.floor(Math.random()*27))}`; rows.push({Name:Math.random()<0.05? '' : name, Phone:phone, Email:email,
-        City:city, 'Order ID':orderId, 'Order Date':date}); if(Math.random()<0.1) rows.push(Object.assign({}, rows[rows.length-1])); // duplicate } loadDataset(cols, rows, 'Demo Data (sample/fake)'); toast( 'Demo data loaded — labeled as sample/fake data');
-        } /* ---------- Modal ---------- */ let modalConfirmCb=null; function confirmModal(title, body, onConfirm){ $( '#modal-title').textContent=title; $( '#modal-body').textContent=body; modalConfirmCb=onConfirm; $( '#modal-bg').classList.add( 'active');
-        } $( '#modal-cancel').addEventListener( 'click', ()=> $('#modal-bg').classList.remove('active')); $('#modal-confirm').addEventListener('click', ()=>{ $('#modal-bg').classList.remove('active'); if(modalConfirmCb) modalConfirmCb(); }); /* ---------- Activity log render ---------- */ function renderLog(){
-        if(!state.activity.length){ $('#log-list').innerHTML='<span class="small">No activity yet.</span>'; return; } $('#log-list').innerHTML = state.activity.map(a=> `
-        <div class="log-item"><span>${esc(a.action)}</span><span class="t">${new Date(a.t).toLocaleString()}</span></div>`).join(''); } /* ---------- Navigation ---------- */ function switchView(view){ $all('.view').forEach(v=>v.classList.remove('active')); $('#view-'+view).classList.add('active');
-        $all('.nav-item').forEach(n=>n.classList.toggle('active', n.dataset.view===view)); $('#view-title').textContent = $('.nav-item.active .label')?.textContent || view; if(view==='validate') renderValidationRulesUI(); if(view==='duplicates') renderDupeColumnsUI();
-        if(view==='verify') renderVerify(); if(view==='fastentry') renderFastEntryForm(); if(view==='table') renderDataTable(); if(view==='log') renderLog(); } $all('.nav-item').forEach(n=> n.addEventListener('click', ()=> switchView(n.dataset.view)));
-        $all('[data-view-link]').forEach(el=> el.addEventListener('click', ()=> switchView(el.dataset.viewLink))); /* ---------- Wire up: Import ---------- */ const dz = $('#dropzone'); dz.addEventListener('click', ()=> $('#file-input').click()); dz.addEventListener('dragover',
-        e=>{ e.preventDefault(); dz.classList.add('drag'); }); dz.addEventListener('dragleave', ()=> dz.classList.remove('drag')); dz.addEventListener('drop', e=>{ e.preventDefault(); dz.classList.remove('drag'); if(e.dataTransfer.files[0]) handleFile(e.dataTransfer.files[0]);
-        }); $('#file-input').addEventListener('change', e=>{ if(e.target.files[0]) handleFile(e.target.files[0]); }); $('#btn-parse-paste').addEventListener('click', ()=>{ const text = $('#paste-area').value; if(!text.trim()){ toast('Paste something first');
-        return; } importFromText(text, 'pasted text'); }); $('#btn-manual-cols').addEventListener('click', ()=>{ const cols = $('#manual-columns').value.split(',').map(s=>s.trim()).filter(Boolean); if(!cols.length){ toast('Enter at least one column name');
-        return; } loadDataset(cols, [], 'manual entry'); toast('Empty dataset created — add rows in Data Table'); }); /* ---------- Wire up: Table ---------- */ $('#table-search').addEventListener('input', e=>{ state.filters.query=e.target.value; state.page=1;
-        renderDataTable(); }); $('#table-filter-status').addEventListener('change', e=>{ state.filters.status=e.target.value; state.page=1; renderDataTable(); }); $('#btn-clear-filters').addEventListener('click', ()=>{ state.filters={status:'all',query:''};
-        $('#table-search').value=''; $('#table-filter-status').value='all'; state.page=1; renderDataTable(); }); $('#btn-add-row').addEventListener('click', ()=>{ snapshot(); const id=newId(); const data={}; state.columns.forEach(c=>data[c]=''); state.original[id]=Object.assign({},data);
-        state.rows.push({__id:id,__status:'pending',__modified:false,__verified:false,data}); log('Added a blank row'); recomputeAll(); }); $('#btn-add-col').addEventListener('click', ()=>{ const name = prompt('New column name:'); if(!name) return; if(state.columns.includes(name)){
-        toast('Column already exists'); return; } snapshot(); state.columns.push(name); state.rows.forEach(r=> r.data[name]=''); log('Added column "'+name+'"'); recomputeAll(); }); $('#btn-undo').addEventListener('click', undo); $('#btn-redo').addEventListener('click',
-        redo); $('#btn-delete-selected').addEventListener('click', ()=>{ if(!state.selected.size){ toast('No rows selected'); return; } confirmModal('Delete selected records?', `Permanently remove ${state.selected.size} record(s)?`, ()=>{ snapshot();
-        state.rows = state.rows.filter(r=> !state.selected.has(r.__id)); state.selected.clear(); log('Deleted selected records'); recomputeAll(); }); }); $('#page-prev').addEventListener('click', ()=>{ if(state.page>1){ state.page--; renderDataTable();
-        } }); $('#page-next').addEventListener('click', ()=>{ state.page++; renderDataTable(); }); /* ---------- Wire up: Clean ---------- */ $('#btn-clean-run').addEventListener('click', ()=>{ const ops = $all('.clean-op:checked').map(el=>el.value);
-        if(!ops.length){ toast('Select at least one cleaning operation'); return; } runCleaning(ops); }); $('#btn-clean-undo').addEventListener('click', undoToOriginal); /* ---------- Wire up: Validate ---------- */ $('#btn-run-validation').addEventListener('click',
-        runValidation); /* ---------- Wire up: Duplicates ---------- */ $('#dupe-mode').addEventListener('change', renderDupeColumnsUI); $('#btn-run-dupes').addEventListener('click', runDuplicateDetection); /* ---------- Wire up: Verify ---------- */
-        $('#verify-accept').addEventListener('click', verifyAccept); $('#verify-reject').addEventListener('click', verifyReject); $('#verify-edit').addEventListener('click', verifyEditPrompt); $('#verify-mark').addEventListener('click', verifyMark); $('#verify-prev').addEventListener('click',
-        ()=>verifyNav(-1)); $('#verify-next').addEventListener('click', ()=>verifyNav(1)); $('#verify-prev-err').addEventListener('click', ()=>verifyJumpToIssue(-1)); $('#verify-next-err').addEventListener('click', ()=>verifyJumpToIssue(1)); document.addEventListener('keydown',
-        e=>{ if(!document.getElementById('view-verify').classList.contains('active')) return; if(document.activeElement && ['INPUT','TEXTAREA'].includes(document.activeElement.tagName)) return; if(e.ctrlKey && e.key==='Enter'){ e.preventDefault(); verifyAccept();
-        } else if(e.key==='Enter'){ e.preventDefault(); verifyNav(1); } else if(e.key==='Escape'){ e.preventDefault(); renderVerify(); } else if(e.key==='ArrowRight'){ verifyNav(1); } else if(e.key==='ArrowLeft'){ verifyNav(-1); } else if(e.ctrlKey &&
-        e.key.toLowerCase()==='z'){ e.preventDefault(); undo(); renderVerify(); } }); /* ---------- Wire up: Fast Entry ---------- */ $('#fastentry-save').addEventListener('click', fastEntrySave); $('#fastentry-new').addEventListener('click', ()=>{ state.fastEntryDraft={};
-        renderFastEntryForm(); }); $('#auto-next-toggle').addEventListener('change', e=>{ settings.autoNext = e.target.checked; persist(); }); /* ---------- Wire up: Export ---------- */ $all('[data-export]').forEach(btn=> btn.addEventListener('click',
-        ()=>{ const [kind, format] = btn.dataset.export.split('-'); exportSet(kind, format); })); $('#btn-backup').addEventListener('click', createBackup); $('#btn-restore').addEventListener('click', ()=>{ const f = $('#restore-input').files[0]; if(!f){
-        toast('Choose a backup file first'); return; } restoreBackup(f); }); /* ---------- Wire up: Settings ---------- */ function applySettingsToUI(){ $('#set-dateformat').value = settings.dateFormat; $('#set-capitalization').value = settings.capitalization;
-        $('#set-autosave').value = settings.autosave; $('#set-strictness').value = settings.strictness; $('#set-dupe-sensitivity').value = settings.dupeSensitivity; $('#set-rowsperpage').value = settings.rowsPerPage; $('#auto-next-toggle').checked = settings.autoNext;
-        document.body.dataset.theme = settings.darkMode? 'dark':'light'; $('#theme-toggle').textContent = settings.darkMode? '☀️ Light mode':'🌙 Dark mode'; } $('#btn-save-settings').addEventListener('click', ()=>{ settings.dateFormat = $('#set-dateformat').value;
-        settings.capitalization = $('#set-capitalization').value; settings.autosave = Number($('#set-autosave').value)||20; settings.strictness = $('#set-strictness').value; settings.dupeSensitivity = $('#set-dupe-sensitivity').value; settings.rowsPerPage
-        = Number($('#set-rowsperpage').value)||50; persist(); renderDataTable(); toast('Settings saved'); }); $('#btn-clear-local').addEventListener('click', ()=>{ confirmModal('Clear all local data?', 'This permanently deletes the dataset, settings and
-        activity log stored in this browser. Export a backup first if you need one.', ()=>{ localStorage.removeItem(STORE_KEY); localStorage.removeItem(SETTINGS_KEY); location.reload(); }); }); $('#theme-toggle').addEventListener('click', ()=>{ settings.darkMode
-        = !settings.darkMode; applySettingsToUI(); persist(); }); /* ---------- Dashboard session + demo ---------- */ $('#btn-start').addEventListener('click', ()=>{ state.session='running'; renderDashboard(); log('Session started'); }); $('#btn-pause').addEventListener('click',
-        ()=>{ if(state.session==='running'){ state.session='paused'; renderDashboard(); log('Session paused'); } }); $('#btn-resume').addEventListener('click', ()=>{ if(state.session==='paused'){ state.session='running'; renderDashboard(); log('Session
-        resumed'); } }); $('#btn-stop').addEventListener('click', ()=>{ state.session='stopped'; renderDashboard(); log('Session stopped'); }); $('#quick-demo').addEventListener('click', ()=>{ confirmModal('Load demo data?', 'This replaces your current
-        dataset with ~100 fake sample records for testing.', loadDemoData); }); /* ---------- Autosave interval ---------- */ let autosaveTimer = setInterval(()=> persist(), (Number(settings.autosave)||20)*1000); /* ---------- Init ---------- */ function
-        init(){ loadPersisted(); applySettingsToUI(); renderLog(); recomputeAll(); renderValidationRulesUI(); if(!state.rows.length){ // no data yet - land on dashboard, prompt import via UI already visible } switchView('dashboard'); } init(); })();
-        </script>
-        </body>
-
-        </htinit(); })(); </script>
-        </body>
-
-        </html>t>
-        </body>
-
-        </htinit(); })(); </script>
-        </body>
-
-        </html>
-
-        </html>
-
-        </html>
-
-        </html>
-
-        </html>
-
-        </html>
-
-        </html>
-
-        </html>
-
-        </html>
-
-        </html>
-
-        </html>
+</html>
